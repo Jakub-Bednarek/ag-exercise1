@@ -12,14 +12,18 @@ class Candidate:
     def __init__(self, chromosomes: list[bool]):
         self.chromosomes: list[bool] = chromosomes
         self.adaptation_score: int = 0
+        self.weight_carried: int = 0
 
     def calculate_adaptation_score(self, backpack_entries):
         adaptation_score = 0
+        weight_carried = 0
         for i in range(0, len(self.chromosomes)):
             if self.chromosomes[i]:
                 adaptation_score += backpack_entries[i].value
+                weight_carried += backpack_entries[i].weight
 
         self.adaptation_score = adaptation_score
+        self.weight_carried = weight_carried
 
         return adaptation_score
 
@@ -27,7 +31,7 @@ class Candidate:
         pass
 
     def is_exceeding_limit(self, backpack_limit):
-        return self.adaptation_score <= backpack_limit
+        return self.weight_carried <= backpack_limit
 
     def __str__(self):
         return f"{self.adaptation_score} | {self.chromosomes}"
@@ -87,7 +91,10 @@ class Population:
         for candidate in self.candidates:
             candidate.calculate_adaptation_score(self.config.backpack_entries)
 
-            if not candidate.is_exceeding_limit(self.config.storage_size) and candidate.adaptation_score > best_candidate_adaptation:
+            if (
+                not candidate.is_exceeding_limit(self.config.storage_size)
+                and candidate.adaptation_score > best_candidate_adaptation
+            ):
                 best_candidate_adaptation = candidate.adaptation_score
 
         return best_candidate_adaptation
