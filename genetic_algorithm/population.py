@@ -2,7 +2,10 @@ import random
 
 from dataclasses import dataclass
 from genetic_algorithm.helpers.data_loader import ProgramData, DataEntry
-from genetic_algorithm.adaptation_functions import AdaptationFunctionFactory, AdaptationFunctionBase
+from genetic_algorithm.adaptation_functions import (
+    AdaptationFunctionFactory,
+    AdaptationFunctionBase,
+)
 
 
 class Candidate:
@@ -19,7 +22,6 @@ class Candidate:
         self.adaptation_score = adaptation_score
 
         return adaptation_score
-
 
     def set_chromosome(self, index: int, value: bool):
         pass
@@ -51,10 +53,12 @@ class PopulationConfig:
     def create(program_arguments, program_data):
         return PopulationConfig(
             program_arguments.population_size,
-            AdaptationFunctionFactory.create(type=program_arguments.adaptation_function),
+            AdaptationFunctionFactory.create(
+                type=program_arguments.adaptation_function
+            ),
             program_data.entries_count,
             program_data.storage_size,
-            program_data.backpack_entries
+            program_data.backpack_entries,
         )
 
 
@@ -64,8 +68,7 @@ class Population:
 
     def __init__(self, config: PopulationConfig):
         self.config = config
-        self.candidates: list[Candidate] = self.generate_random(
-        )
+        self.candidates: list[Candidate] = self.generate_random()
 
     def generate_random(self) -> list[Candidate]:
         generated_population: list[Candidate] = []

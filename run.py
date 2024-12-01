@@ -2,7 +2,12 @@
 
 from genetic_algorithm.helpers.data_loader import load_data
 from genetic_algorithm.helpers.script_args import parse_script_args
-from genetic_algorithm.population import Candidate, Population, PopulationConfig, simulate_population
+from genetic_algorithm.population import (
+    Candidate,
+    Population,
+    PopulationConfig,
+    simulate_population,
+)
 
 
 def main():
@@ -19,7 +24,9 @@ def main():
     print(loaded_data.storage_size)
     print(len(loaded_data.backpack_entries))
 
-    simulation_results = simulate_population(PopulationConfig.create(parsed_args, loaded_data), 3)
+    simulation_results = simulate_population(
+        PopulationConfig.create(parsed_args, loaded_data), 3
+    )
 
 
 if __name__ == "__main__":
