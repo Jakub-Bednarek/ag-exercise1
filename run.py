@@ -1,12 +1,15 @@
 #!/bin/python3
 
 from helpers.data_loader import load_data, InvalidInputFilePathException
+from helpers.script_args import parse_script_args
 
 
 def main():
+    parsed_args = parse_script_args()
+
     loaded_data = None
     try:
-        loaded_data = load_data("./data/low-dimensional/file.txt")
+        loaded_data = load_data(parsed_args.input)
     except Exception as e:
         print(e)
         return 1
