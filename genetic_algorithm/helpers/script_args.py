@@ -54,5 +54,12 @@ def parse_script_args():
         help="Mutation function to be executed in the algorithm",
         default=0,
     )
+    parser.add_argument(
+        "-d",
+        "--double-point-crossover",
+        help="Enable double point crossover for genetic functions",
+        default=False,
+        action="store_true",
+    )
 
     return parser.parse_args()

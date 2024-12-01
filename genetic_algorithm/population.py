@@ -28,7 +28,7 @@ class PopulationConfig:
             program_data.entries_count,
             program_data.storage_size,
             program_data.backpack_entries,
-            False,
+            program_arguments.double_point_crossover,
         )
 
 
@@ -66,22 +66,26 @@ class Population:
 
         self.candidates = new_population
 
-    def __apply_single_point_genetic_crossover(self, candidates: list[Candidate]):
-        pass
+    def __apply_genetic_crossover(self, candidates: list[Candidate]):
+        for i in range(0, self.config.population_size):
+            if not random.random() < self.CROSS_PROBABILITY:
+                continue
 
-    def __apply_double_point_genetic_crossover(self, candidates: list[Candidate]):
-        pass
+            other_parent_index = i
+            while other_parent_index == i:
+                other_parent_index = random.randint(0, self.config.population_size - 1)
+
+            candidates[i].crossover(
+                candidates[other_parent_index],
+                self.config.double_point_crossover_enabled,
+            )
 
     def __apply_genetic_mutation(self, candidates: list[Candidate]):
         for candidate in candidates:
             candidate.mutate()
 
     def __apply_genetic_operators_on_population(self, candidates: list[Candidate]):
-        if self.config.double_point_crossover_enabled:
-            self.__apply_double_point_genetic_crossover(candidates)
-        else:
-            self.__apply_single_point_genetic_crossover(candidates)
-
+        self.__apply_genetic_crossover(candidates)
         self.__apply_genetic_mutation(candidates)
 
     def __select_new_candidates(self):
@@ -100,10 +104,10 @@ def simulate_population(population_config: PopulationConfig, iterations: int):
     simulation_results: list[int] = []
     n_steps_simulated = 0
     while n_steps_simulated < iterations:
-        print(f"\n---------Iteration {n_steps_simulated + 1}---------")
+        # print(f"\n---------Iteration {n_steps_simulated + 1}---------")
         best_candidate_adaptation = population.run_calculation_step()
         simulation_results.append(best_candidate_adaptation)
-        print(population)
+        # print(population)
 
         if n_steps_simulated == iterations:
             return simulation_results

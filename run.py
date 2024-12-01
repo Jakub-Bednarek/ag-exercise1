@@ -24,9 +24,11 @@ def main():
     print(loaded_data.storage_size)
     print(len(loaded_data.backpack_entries))
 
-    simulation_results = simulate_population(
-        PopulationConfig.create(parsed_args, loaded_data), 3
-    )
+    for i in range(0, 1000):
+        print(i)
+        simulation_results = simulate_population(
+            PopulationConfig.create(parsed_args, loaded_data), 3
+        )
     print(simulation_results)
 
 
