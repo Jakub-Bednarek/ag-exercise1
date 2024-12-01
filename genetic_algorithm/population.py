@@ -26,6 +26,9 @@ class Candidate:
     def set_chromosome(self, index: int, value: bool):
         pass
 
+    def is_exceeding_limit(self, backpack_limit):
+        return self.adaptation_score <= backpack_limit
+
     def __str__(self):
         return f"{self.adaptation_score} | {self.chromosomes}"
 
@@ -84,7 +87,7 @@ class Population:
         for candidate in self.candidates:
             candidate.calculate_adaptation_score(self.config.backpack_entries)
 
-            if candidate.adaptation_score > best_candidate_adaptation:
+            if not candidate.is_exceeding_limit(self.config.storage_size) and candidate.adaptation_score > best_candidate_adaptation:
                 best_candidate_adaptation = candidate.adaptation_score
 
         return best_candidate_adaptation
