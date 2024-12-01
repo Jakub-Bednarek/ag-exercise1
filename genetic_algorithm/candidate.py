@@ -30,6 +30,14 @@ class Candidate:
     def set_chromosome(self, index: int, value: bool):
         pass
 
+    def mutate(self):
+        self.chromosomes = [
+            not chromosome
+            if random.random() < self.MUTATION_PROBABILITY
+            else chromosome
+            for chromosome in self.chromosomes
+        ]
+
     def __str__(self):
         return f"{self.adaptation_score} | {self.chromosomes}"
 

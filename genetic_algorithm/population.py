@@ -73,7 +73,8 @@ class Population:
         pass
 
     def __apply_genetic_mutation(self, candidates: list[Candidate]):
-        pass
+        for candidate in candidates:
+            candidate.mutate()
 
     def __apply_genetic_operators_on_population(self, candidates: list[Candidate]):
         if self.config.double_point_crossover_enabled:
