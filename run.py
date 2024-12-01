@@ -1,8 +1,8 @@
 #!/bin/python3
 
-from helpers.data_loader import load_data, InvalidInputFilePathException
-from helpers.script_args import parse_script_args
-from genetic_algorithm.population import Candidate, Population
+from genetic_algorithm.helpers.data_loader import load_data
+from genetic_algorithm.helpers.script_args import parse_script_args
+from genetic_algorithm.population import Candidate, Population, PopulationConfig, simulate_population
 
 
 def main():
@@ -15,16 +15,11 @@ def main():
         print(e)
         return 1
 
-    print(loaded_data.objects_count)
+    print(loaded_data.entries_count)
     print(loaded_data.storage_size)
-    print(len(loaded_data.data_set))
+    print(len(loaded_data.backpack_entries))
 
-    cand = Candidate.generate_random(10)
-    print(cand)
-
-    print("")
-    pop = Population(10, None, 15)
-    print(pop)
+    simulation_results = simulate_population(PopulationConfig.create(parsed_args, loaded_data), 3)
 
 
 if __name__ == "__main__":
