@@ -19,6 +19,12 @@ class ProgramData:
         self.storage_size: int = 0
         self.data_set: Array[DataEntry] = []
 
+    def add_entry(self, value: int, weight: int):
+        self.data_set.append(self.DataEntry(value, weight))
+
+    def append_entry(self, data_entry: DataEntry):
+        self.data_set.append(data_entry)
+
 
 def load_data(file_path: str):
     file_path = os.path.abspath(file_path)
@@ -40,9 +46,6 @@ def load_data(file_path: str):
             continue
 
         item_value, item_weight = data_entry.split()
-        program_data.data_set.append(ProgramData.DataEntry(item_value, item_weight))
-
-    for item in program_data.data_set:
-        print(item)
+        program_data.add_entry(item_value, item_weight)
 
     return program_data

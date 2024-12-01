@@ -2,9 +2,8 @@
 
 from helpers.data_loader import load_data, InvalidInputFilePathException
 
-def main():
-    print("Hello there")
 
+def main():
     loaded_data = None
     try:
         loaded_data = load_data("./data/low-dimensional/file.txt")
