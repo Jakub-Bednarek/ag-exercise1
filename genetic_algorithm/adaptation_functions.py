@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+from genetic_algorithm.candidate import Candidate
 
 
 class AdaptationFunctionType(Enum):
@@ -10,23 +11,23 @@ class AdaptationFunctionType(Enum):
 
 class AdaptationFunctionBase(ABC):
     @abstractmethod
-    def evaluate(self):
+    def select(self, candidates: list[Candidate]):
         pass
 
 
 class RouletteSelectionFunction(AdaptationFunctionBase):
-    def evaluate(self):
-        print("Roulette")
+    def select(self, candidates: list[Candidate]):
+        return candidates
 
 
 class TournamentSelectionFunction(AdaptationFunctionBase):
-    def evalutate(self):
-        print("Tournament")
+    def select(self, candidates: list[Candidate]):
+        return candidates
 
 
 class RankingSelectionFunction(AdaptationFunctionBase):
-    def evaluate(self):
-        print("Ranking")
+    def select(self, candidates: list[Candidate]):
+        return candidates
 
 
 class AdaptationFunctionFactory:

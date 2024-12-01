@@ -6,46 +6,7 @@ from genetic_algorithm.adaptation_functions import (
     AdaptationFunctionFactory,
     AdaptationFunctionBase,
 )
-
-
-class Candidate:
-    def __init__(self, chromosomes: list[bool]):
-        self.chromosomes: list[bool] = chromosomes
-        self.adaptation_score: int = 0
-        self.weight_carried: int = 0
-
-    def calculate_adaptation_score(self, backpack_entries):
-        adaptation_score = 0
-        weight_carried = 0
-        for i in range(0, len(self.chromosomes)):
-            if self.chromosomes[i]:
-                adaptation_score += backpack_entries[i].value
-                weight_carried += backpack_entries[i].weight
-
-        self.adaptation_score = adaptation_score
-        self.weight_carried = weight_carried
-
-        return adaptation_score
-
-    def set_chromosome(self, index: int, value: bool):
-        pass
-
-    def is_exceeding_limit(self, backpack_limit):
-        return self.weight_carried <= backpack_limit
-
-    def __str__(self):
-        return f"{self.adaptation_score} | {self.chromosomes}"
-
-    def __repr__(self):
-        return str(self)
-
-    @staticmethod
-    def generate_random(entries_count: int):
-        generated_chromosomes: list[bool] = []
-        for i in range(0, entries_count):
-            generated_chromosomes.append(bool(random.getrandbits(1)))
-
-        return Candidate(generated_chromosomes)
+from genetic_algorithm.candidate import Candidate
 
 
 @dataclass
@@ -53,8 +14,9 @@ class PopulationConfig:
     population_size: int
     adaptation_function: AdaptationFunctionBase
     entries_count: int
-    storage_size: int
+    backpack_limit: int
     backpack_entries: list[DataEntry]
+    double_point_crossover_enabled: bool
 
     @staticmethod
     def create(program_arguments, program_data):
@@ -66,12 +28,12 @@ class PopulationConfig:
             program_data.entries_count,
             program_data.storage_size,
             program_data.backpack_entries,
+            False,
         )
 
 
 class Population:
     CROSS_PROBABILITY = 0.5
-    MUTATION_PROBABILITY = 0.1
 
     def __init__(self, config: PopulationConfig):
         self.config = config
@@ -89,30 +51,40 @@ class Population:
         best_candidate_adaptation = 0
 
         for candidate in self.candidates:
-            candidate.calculate_adaptation_score(self.config.backpack_entries)
+            candidate.calculate_adaptation_score(
+                self.config.backpack_entries, self.config.backpack_limit
+            )
 
-            if (
-                not candidate.is_exceeding_limit(self.config.storage_size)
-                and candidate.adaptation_score > best_candidate_adaptation
-            ):
+            if candidate.adaptation_score > best_candidate_adaptation:
                 best_candidate_adaptation = candidate.adaptation_score
 
         return best_candidate_adaptation
 
-    def run_mutation_step(self):
+    def run_genetic_modification_step(self):
+        new_population = self.__select_new_candidates()
+        self.__apply_genetic_operators_on_population(new_population)
+
+        self.candidates = new_population
+
+    def __apply_single_point_genetic_crossover(self, candidates: list[Candidate]):
         pass
 
-    def __cross_candidates(self):
+    def __apply_double_point_genetic_crossover(self, candidates: list[Candidate]):
         pass
 
-    def __mutate_candidate(self):
+    def __apply_genetic_mutation(self, candidates: list[Candidate]):
         pass
 
-    def __try_to_apply_genetic_operator(self):
-        pass
+    def __apply_genetic_operators_on_population(self, candidates: list[Candidate]):
+        if self.config.double_point_crossover_enabled:
+            self.__apply_double_point_genetic_crossover(candidates)
+        else:
+            self.__apply_single_point_genetic_crossover(candidates)
 
-    def __apply_adapatation_function(self):
-        pass
+        self.__apply_genetic_mutation(candidates)
+
+    def __select_new_candidates(self):
+        return self.config.adaptation_function.select(self.candidates)
 
     def __str__(self):
         return "\n".join([str(candidate) for candidate in self.candidates])
@@ -135,7 +107,7 @@ def simulate_population(population_config: PopulationConfig, iterations: int):
         if n_steps_simulated == iterations:
             return simulation_results
 
-        population.run_mutation_step()
+        population.run_genetic_modification_step()
 
         n_steps_simulated += 1
 

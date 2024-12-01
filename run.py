@@ -27,6 +27,7 @@ def main():
     simulation_results = simulate_population(
         PopulationConfig.create(parsed_args, loaded_data), 3
     )
+    print(simulation_results)
 
 
 if __name__ == "__main__":
