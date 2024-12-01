@@ -29,9 +29,9 @@ def parse_script_args():
     parser.add_argument(
         "-a",
         "--adaptation-function",
-        choices=AdaptationFunctionType,
+        choices=AdaptationFunctionType.__members__,
         help="Adapation function to be executed in the algorithm",
-        default=0,
+        default=AdaptationFunctionType.ROULETTE,
     )
     parser.add_argument(
         "-f",

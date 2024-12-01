@@ -24,12 +24,14 @@ def main():
     print(loaded_data.storage_size)
     print(len(loaded_data.backpack_entries))
 
-    for i in range(0, 1000):
+    its = 1
+    for i in range(0, its):
         print(i)
         simulation_results = simulate_population(
-            PopulationConfig.create(parsed_args, loaded_data), 3
+            PopulationConfig.create(parsed_args, loaded_data), 50000
         )
-    print(simulation_results)
+    # print(simulation_results)
+    print(sorted(simulation_results, reverse=True)[0])
 
 
 if __name__ == "__main__":
