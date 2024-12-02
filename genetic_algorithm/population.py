@@ -23,7 +23,7 @@ class PopulationConfig:
         return PopulationConfig(
             program_arguments.population_size,
             AdaptationFunctionFactory.create(
-                type=program_arguments.adaptation_function
+                function_type=program_arguments.adaptation_function
             ),
             program_data.entries_count,
             program_data.storage_size,
