@@ -1,6 +1,7 @@
 import random
 
 
+# TODO: ex_2 MUTATION_PROBABILITY should be config param
 class Candidate:
     MUTATION_PROBABILITY = 0.1
 

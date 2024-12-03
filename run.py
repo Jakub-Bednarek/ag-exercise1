@@ -28,7 +28,7 @@ def main():
     for i in range(0, its):
         print(i)
         simulation_results = simulate_population(
-            PopulationConfig.create(parsed_args, loaded_data), 50000
+            PopulationConfig.create(parsed_args, loaded_data), 10
         )
     # print(simulation_results)
     print(sorted(simulation_results, reverse=True)[0])
