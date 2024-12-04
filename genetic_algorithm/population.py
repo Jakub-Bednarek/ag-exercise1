@@ -32,6 +32,7 @@ class PopulationConfig:
         )
 
 
+# TODO: ex_2 CROSS_PROBABILITY should be config param
 class Population:
     CROSS_PROBABILITY = 0.5
 
@@ -55,8 +56,8 @@ class Population:
                 self.config.backpack_entries, self.config.backpack_limit
             )
 
-            if candidate.adaptation_score > best_candidate_adaptation:
-                best_candidate_adaptation = candidate.adaptation_score
+            if candidate.get_adaptation_score() > best_candidate_adaptation:
+                best_candidate_adaptation = candidate.get_adaptation_score()
 
         return best_candidate_adaptation
 
@@ -104,10 +105,8 @@ def simulate_population(population_config: PopulationConfig, iterations: int):
     simulation_results: list[int] = []
     n_steps_simulated = 0
     while n_steps_simulated < iterations:
-        # print(f"\n---------Iteration {n_steps_simulated + 1}---------")
         best_candidate_adaptation = population.run_calculation_step()
         simulation_results.append(best_candidate_adaptation)
-        # print(population)
 
         if n_steps_simulated == iterations:
             return simulation_results

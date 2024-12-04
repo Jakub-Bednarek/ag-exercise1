@@ -43,6 +43,9 @@ class Candidate:
         else:
             self.__single_point_crossover(other_parent)
 
+    def get_adaptation_score(self):
+        return self.adaptation_score
+
     def __single_point_crossover(self, other_parent):
         crossover_point = self.__generate_crossover_point()
         self.chromosomes = (
