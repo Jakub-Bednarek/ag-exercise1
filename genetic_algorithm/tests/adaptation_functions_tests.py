@@ -75,19 +75,19 @@ class TestRouletteSelectionFunction(unittest.TestCase):
         with self.assertRaises(EmptyCandidatesListException):
             RouletteSelectionFunction().select(EMPTY_TEST_CANDIDATES)
 
+    @patch("random.choices", sorted_choices_result)
     def test_correct_candidates_list_with_sorted_choices_result(self):
-        with patch("random.choices", sorted_choices_result):
-            res = RouletteSelectionFunction().select(NON_ZERO_CANDIDATES_LIST.copy())
+        res = RouletteSelectionFunction().select(NON_ZERO_CANDIDATES_LIST.copy())
 
-            self.assertEqual(len(res), EXPECTED_CORRECT_OUTPUT_LIST_SIZE)
-            self.assertEqual(res, NON_ZERO_CANDIDATES_LIST)
+        self.assertEqual(len(res), EXPECTED_CORRECT_OUTPUT_LIST_SIZE)
+        self.assertEqual(res, NON_ZERO_CANDIDATES_LIST)
 
+    @patch("random.choices", random_choices_result)
     def test_correct_candidates_list_with_random_choices_result(self):
-        with patch("random.choices", random_choices_result):
-            res = RouletteSelectionFunction().select(NON_ZERO_CANDIDATES_LIST.copy())
+        res = RouletteSelectionFunction().select(NON_ZERO_CANDIDATES_LIST.copy())
 
-            self.assertEqual(len(res), EXPECTED_CORRECT_OUTPUT_LIST_SIZE)
-            self.assertEqual(res, self.EXPECTED_CANDIDATES_OUTPUT_LIST)
+        self.assertEqual(len(res), EXPECTED_CORRECT_OUTPUT_LIST_SIZE)
+        self.assertEqual(res, self.EXPECTED_CANDIDATES_OUTPUT_LIST)
 
     def test_zero_score_cadidates_list(self):
         res = RouletteSelectionFunction().select(ZERO_SCORE_TEST_CANDIDATES.copy())
@@ -207,9 +207,6 @@ class TestRankSelectionFunction(unittest.TestCase):
 
         self.assertEqual(len(res), EXPECTED_CORRECT_OUTPUT_LIST_SIZE)
         self.assertEqual(res, self.EXPECTED_SORTED_CHOICES_CANDIDATES_LIST)
-
-    def test_sample(self):
-        self.assertTrue(True)
 
 
 if __name__ == "__main__":
