@@ -9,7 +9,7 @@ class EmptyCandidatesListException(Exception):
     pass
 
 
-class AdaptationFunctionType(Enum):
+class SelectionFunctionType(Enum):
     ROULETTE = auto()
     TOURNAMENT = auto()
     RANK = auto()
@@ -17,19 +17,19 @@ class AdaptationFunctionType(Enum):
     @staticmethod
     def argparse(val):
         try:
-            return AdaptationFunctionType[val]
+            return SelectionFunctionType[val]
         except KeyError:
             return s
 
 
-class AdaptationFunctionBase(ABC):
+class SelectionFunctionBase(ABC):
     @abstractmethod
-    def select(self, candidates: list[Candidate]):
+    def select(self, candidates: list[Candidate]) -> list[Candidate]:
         pass
 
 
-class RouletteSelectionFunction(AdaptationFunctionBase):
-    def select(self, candidates: list[Candidate]):
+class RouletteSelectionFunction(SelectionFunctionBase):
+    def select(self, candidates: list[Candidate]) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
@@ -43,7 +43,9 @@ class RouletteSelectionFunction(AdaptationFunctionBase):
 
         return [candidates[index] for index in selected_candidates_indexes]
 
-    def __create_weights_and_indexes(self, sorted_candidates: list[Candidate]):
+    def __create_weights_and_indexes(
+        self, sorted_candidates: list[Candidate]
+    ) -> (int, int, int):
         weight_total = 0
         weights = []
         indexes = []
@@ -55,8 +57,8 @@ class RouletteSelectionFunction(AdaptationFunctionBase):
         return weights, indexes, weight_total
 
 
-class TournamentSelectionFunction(AdaptationFunctionBase):
-    def select(self, candidates: list[Candidate]):
+class TournamentSelectionFunction(SelectionFunctionBase):
+    def select(self, candidates: list[Candidate]) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
@@ -73,7 +75,7 @@ class TournamentSelectionFunction(AdaptationFunctionBase):
 
     def __evaluate_local_tournament(
         self, candidates: list[Candidate], tournament_size: int
-    ):
+    ) -> list[Candidate]:
         tournament_candidates_indexes: list[int] = list(range(0, len(candidates)))
         random.shuffle(tournament_candidates_indexes)
 
@@ -93,8 +95,8 @@ class TournamentSelectionFunction(AdaptationFunctionBase):
         return candidates[winning_candidate_index]
 
 
-class RankSelectionFunction(AdaptationFunctionBase):
-    def select(self, candidates: list[Candidate]):
+class RankSelectionFunction(SelectionFunctionBase):
+    def select(self, candidates: list[Candidate]) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
@@ -110,14 +112,14 @@ class RankSelectionFunction(AdaptationFunctionBase):
         return [candidates[index] for index in selected_candidates_indexes]
 
 
-class AdaptationFunctionFactory:
+class SelectionFunctionFactory:
     @staticmethod
     def create(function_type: str):
-        function_type = AdaptationFunctionType[function_type]
+        function_type = SelectionFunctionType[function_type]
         match function_type:
-            case AdaptationFunctionType.ROULETTE:
+            case SelectionFunctionType.ROULETTE:
                 return RouletteSelectionFunction()
-            case AdaptationFunctionType.TOURNAMENT:
+            case SelectionFunctionType.TOURNAMENT:
                 return TournamentSelectionFunction()
-            case AdaptationFunctionType.RANK:
+            case SelectionFunctionType.RANK:
                 return RankSelectionFunction()

@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from genetic_algorithm.adaptation_functions import AdaptationFunctionType
+from genetic_algorithm.selection_functions import SelectionFunctionType
 
 
 def parse_script_args():
@@ -28,17 +28,10 @@ def parse_script_args():
     )
     parser.add_argument(
         "-a",
-        "--adaptation-function",
-        choices=AdaptationFunctionType.__members__,
-        help="Adapation function to be executed in the algorithm",
-        default=AdaptationFunctionType.ROULETTE,
-    )
-    parser.add_argument(
-        "-f",
         "--selection-function",
-        type=int,
+        choices=SelectionFunctionType.__members__,
         help="Selection function to be executed in the algorithm",
-        default=0,
+        default=SelectionFunctionType.ROULETTE,
     )
     parser.add_argument(
         "-c",

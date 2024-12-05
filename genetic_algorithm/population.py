@@ -2,9 +2,9 @@ import random
 
 from dataclasses import dataclass
 from genetic_algorithm.helpers.data_loader import ProgramData, DataEntry
-from genetic_algorithm.adaptation_functions import (
-    AdaptationFunctionFactory,
-    AdaptationFunctionBase,
+from genetic_algorithm.selection_functions import (
+    SelectionFunctionFactory,
+    SelectionFunctionBase,
 )
 from genetic_algorithm.candidate import Candidate
 
@@ -12,7 +12,7 @@ from genetic_algorithm.candidate import Candidate
 @dataclass
 class PopulationConfig:
     population_size: int
-    adaptation_function: AdaptationFunctionBase
+    selection_function: SelectionFunctionBase
     entries_count: int
     backpack_limit: int
     backpack_entries: list[DataEntry]
@@ -22,8 +22,8 @@ class PopulationConfig:
     def create(program_arguments, program_data):
         return PopulationConfig(
             program_arguments.population_size,
-            AdaptationFunctionFactory.create(
-                function_type=program_arguments.adaptation_function
+            SelectionFunctionFactory.create(
+                function_type=program_arguments.selection_function
             ),
             program_data.entries_count,
             program_data.storage_size,
@@ -89,17 +89,19 @@ class Population:
         for candidate in candidates:
             candidate.mutate()
 
-    def __select_new_candidates(self):
-        return self.config.adaptation_function.select(self.candidates)
+    def __select_new_candidates(self) -> str:
+        return self.config.selection_function.select(self.candidates)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "\n".join([str(candidate) for candidate in self.candidates])
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
 
-def simulate_population(population_config: PopulationConfig, iterations: int):
+def simulate_population(
+    population_config: PopulationConfig, iterations: int
+) -> list[int]:
     population = Population(population_config)
 
     simulation_results: list[int] = []

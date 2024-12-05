@@ -17,7 +17,9 @@ class Candidate:
         self.adaptation_score: int = 0
         self.weight_carried: int = 0
 
-    def calculate_adaptation_score(self, backpack_entries, backpack_limit):
+    def calculate_adaptation_score(
+        self, backpack_entries: list[DataEntry], backpack_limit: int
+    ) -> int:
         if not self.__are_backpack_entries_valid(backpack_entries):
             raise InvalidBackpackEntriesSizeException()
 
@@ -42,16 +44,18 @@ class Candidate:
             for chromosome in self.chromosomes
         ]
 
-    def crossover(self, other_parent, double_point_crossover_enabled):
+    def crossover(self, other_parent, double_point_crossover_enabled: bool):
         if double_point_crossover_enabled:
             self.__double_point_crossover(other_parent)
         else:
             self.__single_point_crossover(other_parent)
 
-    def get_adaptation_score(self):
+    def get_adaptation_score(self) -> int:
         return self.adaptation_score
 
-    def __calculate_weight_and_adaptation(self, backpack_entries: list[DataEntry]):
+    def __calculate_weight_and_adaptation(
+        self, backpack_entries: list[DataEntry]
+    ) -> (int, int):
         total_weight = 0
         adaptation_score = 0
         for i in range(0, self.chromosomes_count):
@@ -93,12 +97,12 @@ class Candidate:
         )
 
     # python list operator does not include upper bound of the range, safe to use full length
-    def __generate_crossover_point(self):
+    def __generate_crossover_point(self) -> int:
         return random.randint(0, self.chromosomes_count)
 
     def __get_sorted_crossover_points(
         self, first_crossover_point: int, second_crossover_point: int
-    ):
+    ) -> (int, int):
         if first_crossover_point > second_crossover_point:
             swap_tmp = first_crossover_point
             first_crossover_point = second_crossover_point
@@ -106,10 +110,10 @@ class Candidate:
 
         return first_crossover_point, second_crossover_point
 
-    def __str__(self):
+    def __str__(self) -> int:
         return f"{self.adaptation_score} | {self.chromosomes}"
 
-    def __repr__(self):
+    def __repr__(self) -> int:
         return str(self)
 
     @staticmethod
