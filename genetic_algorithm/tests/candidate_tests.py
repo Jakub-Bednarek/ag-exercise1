@@ -16,10 +16,6 @@ LOW_BACKPACK_STORAGE_SIZE = 10
 HIGH_BACKPACK_STORAGE_SIZE = 40
 
 
-# def create_dummy_candidate():
-#     return Candidate(
-#         chromosomes=[]
-#     )
 def always_zero_random():
     return 0.0
 

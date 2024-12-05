@@ -67,9 +67,13 @@ class Population:
 
         self.candidates = new_population
 
+    def __apply_genetic_operators_on_population(self, candidates: list[Candidate]):
+        self.__apply_genetic_crossover(candidates)
+        self.__apply_genetic_mutation(candidates)
+
     def __apply_genetic_crossover(self, candidates: list[Candidate]):
-        for i in range(0, self.config.population_size):
-            if not random.random() < self.CROSS_PROBABILITY:
+        for i in range(0, len(self.candidates)):
+            if random.random() > self.CROSS_PROBABILITY:
                 continue
 
             other_parent_index = i
@@ -84,10 +88,6 @@ class Population:
     def __apply_genetic_mutation(self, candidates: list[Candidate]):
         for candidate in candidates:
             candidate.mutate()
-
-    def __apply_genetic_operators_on_population(self, candidates: list[Candidate]):
-        self.__apply_genetic_crossover(candidates)
-        self.__apply_genetic_mutation(candidates)
 
     def __select_new_candidates(self):
         return self.config.adaptation_function.select(self.candidates)
