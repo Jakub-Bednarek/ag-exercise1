@@ -13,6 +13,9 @@ class DataEntry:
     def __str__(self) -> str:
         return f"{self.value} {self.weight}"
 
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class ProgramData:
     def __init__(self):

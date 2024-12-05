@@ -62,6 +62,9 @@ class RouletteSelectionFunction(SelectionFunctionBase):
 
         return weights, indexes, weight_total
 
+    def __str__(self) -> str:
+        return "Roulette"
+
 
 class TournamentSelectionFunction(SelectionFunctionBase):
     def select(self, candidates: list[Candidate]) -> list[Candidate]:
@@ -102,6 +105,9 @@ class TournamentSelectionFunction(SelectionFunctionBase):
 
         return copy.deepcopy(candidates[winning_candidate_index])
 
+    def __str__(self) -> str:
+        return "Tournament"
+
 
 class RankSelectionFunction(SelectionFunctionBase):
     def select(self, candidates: list[Candidate]) -> list[Candidate]:
@@ -120,6 +126,9 @@ class RankSelectionFunction(SelectionFunctionBase):
         return [
             copy.deepcopy(candidates[index]) for index in selected_candidates_indexes
         ]
+
+    def __str__(self) -> str:
+        return "Rank"
 
 
 class SelectionFunctionFactory:

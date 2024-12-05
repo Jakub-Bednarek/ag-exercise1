@@ -1,6 +1,5 @@
 # data directories
 data/
-output/
 
 # python specific
 genetic_algorithm/**/__pycache__

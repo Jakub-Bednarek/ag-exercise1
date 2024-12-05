@@ -35,6 +35,9 @@ class PopulationConfig:
             program_arguments.crossover_probability,
         )
 
+    def __str__(self) -> str:
+        return f"\tPopulation size: {self.population_size}\n\tSelection function: {self.selection_function}\n\tBackpack entries size: {self.backpack_entries_count}\n\tBackpack limit: {self.backpack_limit}\n\tDouble point crossover enabled: {self.double_point_crossover_enabled}\n\tMutation probability: {self.mutation_probability}\n\tCrossover probability: {self.crossover_probability}"
+
 
 class Population:
     def __init__(self, config: PopulationConfig):
@@ -107,6 +110,10 @@ def simulate_population(
 ) -> list[float]:
     population = Population(population_config)
 
+    status_checkpoint = float(iterations) / 10
+    next_status_checkpoint = status_checkpoint
+    checkpoints_reached = 0
+
     simulation_results: list[float] = []
     n_steps_simulated = 0
     while n_steps_simulated < iterations:
@@ -119,5 +126,11 @@ def simulate_population(
         population.run_genetic_modification_step()
 
         n_steps_simulated += 1
+
+        if n_steps_simulated > next_status_checkpoint:
+            checkpoints_reached += 1
+            next_status_checkpoint = checkpoints_reached * status_checkpoint
+
+            print(f"\t{checkpoints_reached * 10}%...")
 
     return simulation_results
