@@ -23,23 +23,21 @@ def run_normal_simulation(parsed_args):
         print(e)
         return 1
 
-    print(loaded_data.backpack_entries_count)
-    print(loaded_data.storage_size)
-    print(len(loaded_data.backpack_entries))
+    print("---Running simulation---")
 
-    its = 1
-    for i in range(0, its):
-        simulation_results = simulate_population(
-            PopulationConfig.create(parsed_args, loaded_data), 10
-        )
+    simulation_results = simulate_population(
+        PopulationConfig.create(parsed_args, loaded_data), parsed_args.iterations
+    )
 
-    print(sorted(simulation_results, reverse=True)[0])
+    print("---Done---")
+
+    print(f"Best adaptation score: {sorted(simulation_results, reverse=True)[0]}")
 
 
 def main():
     parsed_args = parse_script_args()
 
-    if parsed_args.run_example:
+    if parsed_args.command == "run_example":
         run_example_simulation()
     else:
         run_normal_simulation(parsed_args)

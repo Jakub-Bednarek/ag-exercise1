@@ -67,12 +67,12 @@ LARGE_DATA_FILES = [
     LARGE_DATA_FILE_11,
 ]
 
-SMALL_POPULATION_SIZE = 100
-SMALL_POPULATION_ITERATION_COUNT = 100
+SMALL_POPULATION_SIZE = 30
+SMALL_POPULATION_ITERATION_COUNT = 1000
 LARGE_POPULATION_SIZE = 1000000
-LARGE_POPULATION_ITERATION_COUNT = 30
-DEFAULT_MUTATION_PROBABILITY = 0.05
-DEFAULT_CROSSOVER_PROBABILITY = 0.25
+LARGE_POPULATION_ITERATION_COUNT = 10
+DEFAULT_MUTATION_PROBABILITY = 0.2
+DEFAULT_CROSSOVER_PROBABILITY = 0.5
 
 OUTPUT_DIR = "output/"
 
@@ -88,6 +88,7 @@ def draw_single_simulation_plot(
     simulation_results: list[float], plot_title: str, output_file: str
 ):
     fig, ax = plt.subplots()
+    fig.set_size_inches(18.5, 10.5)
     ax.plot(range(0, len(simulation_results)), simulation_results)
 
     ax.set_xlabel("Iterations")
@@ -105,6 +106,7 @@ def draw_single_plot_with_multiple_datasets(
     x_axis_values = range(1, last_data_set_size + 1)
 
     fig, ax = plt.subplots()
+    fig.set_size_inches(18.5, 10.5)
     ax.set_xlabel("Iterations")
     ax.set_ylabel("Adaptation score")
     ax.set_title(plot_title)
@@ -119,7 +121,9 @@ def draw_single_plot_with_multiple_datasets(
 
         ax.plot(x_axis_values, data_set.data, label=data_set.label)
 
-    plt.savefig(output_file)
+    ax.legend()
+
+    plt.savefig(output_file, dpi=300)
     print(f"\n - Plot file saved to: {output_file}")
 
 
