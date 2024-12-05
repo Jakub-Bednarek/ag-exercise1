@@ -35,17 +35,17 @@ def parse_script_args():
     )
     parser.add_argument(
         "-c",
-        "--cross-function",
+        "--crossover-probability",
         type=int,
-        help="Cross function to be executed in the algorithm",
-        default=0,
+        help="Chance for crossover to occur for each candidate during genetic modification simulation step",
+        default=0.5,
     )
     parser.add_argument(
         "-m",
-        "--mutation-function",
-        type=int,
-        help="Mutation function to be executed in the algorithm",
-        default=0,
+        "--mutation-probability",
+        type=float,
+        help="Chance for mutation to occur for each gene in candidate during genetic modification simulation step",
+        default=0.1,
     )
     parser.add_argument(
         "-d",

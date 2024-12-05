@@ -17,6 +17,8 @@ class PopulationConfig:
     backpack_limit: int
     backpack_entries: list[DataEntry]
     double_point_crossover_enabled: bool
+    mutation_probability: float
+    crossover_probability: float
 
     @staticmethod
     def create(program_arguments, program_data):
@@ -29,13 +31,12 @@ class PopulationConfig:
             program_data.storage_size,
             program_data.backpack_entries,
             program_arguments.double_point_crossover,
+            program_arguments.mutation_probability,
+            program_arguments.crossover_probability,
         )
 
 
-# TODO: ex_2 CROSS_PROBABILITY should be config param
 class Population:
-    CROSS_PROBABILITY = 0.5
-
     def __init__(self, config: PopulationConfig):
         self.config = config
         self.candidates: list[Candidate] = self.generate_random()
@@ -43,7 +44,9 @@ class Population:
     def generate_random(self) -> list[Candidate]:
         generated_population: list[Candidate] = []
         for i in range(0, self.config.population_size):
-            candidate = Candidate.generate_random(self.config.entries_count)
+            candidate = Candidate.generate_random(
+                self.config.entries_count, self.config.mutation_probability
+            )
             generated_population.append(candidate)
 
         return generated_population
@@ -73,7 +76,7 @@ class Population:
 
     def __apply_genetic_crossover(self, candidates: list[Candidate]):
         for i in range(0, len(self.candidates)):
-            if random.random() > self.CROSS_PROBABILITY:
+            if random.random() > self.config.crossover_probability:
                 continue
 
             other_parent_index = i

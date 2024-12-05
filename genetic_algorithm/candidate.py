@@ -8,15 +8,13 @@ class InvalidBackpackEntriesSizeException(Exception):
     pass
 
 
-# TODO: ex_2 MUTATION_PROBABILITY should be config param
 class Candidate:
-    MUTATION_PROBABILITY = 0.1
-
-    def __init__(self, chromosomes: list[bool]):
+    def __init__(self, chromosomes: list[bool], mutation_probability: float):
         self.chromosomes: list[bool] = chromosomes
         self.chromosomes_count: int = len(self.chromosomes)
         self.adaptation_score: float = 0.0
         self.weight_carried: float = 0.0
+        self.mutation_probability: float = mutation_probability
 
     def calculate_adaptation_score(
         self, backpack_entries: list[DataEntry], backpack_limit: float
@@ -40,7 +38,7 @@ class Candidate:
     def mutate(self):
         self.chromosomes = [
             not chromosome
-            if random.random() < self.MUTATION_PROBABILITY
+            if random.random() < self.mutation_probability
             else chromosome
             for chromosome in self.chromosomes
         ]
@@ -118,9 +116,9 @@ class Candidate:
         return str(self)
 
     @staticmethod
-    def generate_random(entries_count: int):
+    def generate_random(entries_count: int, mutation_probability: float):
         generated_chromosomes: list[bool] = []
         for i in range(0, entries_count):
             generated_chromosomes.append(bool(random.getrandbits(1)))
 
-        return Candidate(generated_chromosomes)
+        return Candidate(generated_chromosomes, mutation_probability)

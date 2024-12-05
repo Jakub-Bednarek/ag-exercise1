@@ -1,4 +1,3 @@
-
 DATA_PATH = "data/"
 SMALL_DATA_PATH = f"{DATA_PATH}/low-dimensional/"
 LARGE_DATA_PATH = f"{DATA_PATH}/large_scale/"
@@ -29,17 +28,22 @@ LARGE_DATA_FILE_11 = f"{LARGE_DATA_PATH}/knapPI_2_500_1000_1"
 
 OUTPUT_DIR = "output/"
 
+
 def run_simulation_on_all_test_data_files():
     pass
+
 
 def run_mutation_and_crossover_simulation():
     pass
 
+
 def run_rank_and_roulette_simulation():
     pass
 
+
 def run_single_and_double_point_crossover_simulation():
     pass
+
 
 def run_rank_roulette_and_tournament_simulation():
     pass
