@@ -16,7 +16,7 @@ class DataEntry:
 
 class ProgramData:
     def __init__(self):
-        self.entries_count: int = 0
+        self.backpack_entries_count: int = 0
         self.storage_size: float = 0.0
         self.backpack_entries: Array[DataEntry] = []
 
@@ -39,7 +39,7 @@ def load_data(file_path: str) -> ProgramData:
 
     program_data = ProgramData()
     objects_count, storage_size = file_content[0].split()
-    program_data.entries_count = int(objects_count)
+    program_data.backpack_entries_count = int(objects_count)
     program_data.storage_size = float(storage_size)
 
     for data_entry in file_content[1:]:

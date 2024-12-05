@@ -54,5 +54,12 @@ def parse_script_args():
         default=False,
         action="store_true",
     )
+    parser.add_argument(
+        "-e",
+        "--run-example",
+        help="Change execution mode to example with predefined population simulations",
+        default=False,
+        action="store_true",
+    )
 
     return parser.parse_args()

@@ -119,9 +119,14 @@ class RankSelectionFunction(SelectionFunctionBase):
 
 class SelectionFunctionFactory:
     @staticmethod
-    def create(function_type: str):
+    def from_string(function_type: str):
         concrete_function_type = SelectionFunctionType[function_type]
-        match concrete_function_type:
+
+        return SelectionFunctionFactory.create(concrete_function_type)
+
+    @staticmethod
+    def create(function_type: SelectionFunctionType):
+        match function_type:
             case SelectionFunctionType.ROULETTE:
                 return RouletteSelectionFunction()
             case SelectionFunctionType.TOURNAMENT:

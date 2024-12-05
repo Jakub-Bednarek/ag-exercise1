@@ -13,7 +13,7 @@ from genetic_algorithm.candidate import Candidate
 class PopulationConfig:
     population_size: int
     selection_function: SelectionFunctionBase
-    entries_count: int
+    backpack_entries_count: int
     backpack_limit: int
     backpack_entries: list[DataEntry]
     double_point_crossover_enabled: bool
@@ -27,7 +27,7 @@ class PopulationConfig:
             SelectionFunctionFactory.create(
                 function_type=program_arguments.selection_function
             ),
-            program_data.entries_count,
+            program_data.backpack_entries_count,
             program_data.storage_size,
             program_data.backpack_entries,
             program_arguments.double_point_crossover,
@@ -45,7 +45,7 @@ class Population:
         generated_population: list[Candidate] = []
         for i in range(0, self.config.population_size):
             candidate = Candidate.generate_random(
-                self.config.entries_count, self.config.mutation_probability
+                self.config.backpack_entries_count, self.config.mutation_probability
             )
             generated_population.append(candidate)
 
