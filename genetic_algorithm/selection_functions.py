@@ -1,8 +1,10 @@
+import random
+
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from genetic_algorithm.candidate import Candidate
+from typing import Tuple
 
-import random
+from genetic_algorithm.candidate import Candidate
 
 
 class EmptyCandidatesListException(Exception):
@@ -34,7 +36,7 @@ class RouletteSelectionFunction(SelectionFunctionBase):
             raise EmptyCandidatesListException()
 
         weights, indexes, weight_total = self.__create_weights_and_indexes(candidates)
-        if weight_total == 0:
+        if weight_total == 0.0:
             return candidates
 
         selected_candidates_indexes = random.choices(
@@ -45,10 +47,11 @@ class RouletteSelectionFunction(SelectionFunctionBase):
 
     def __create_weights_and_indexes(
         self, sorted_candidates: list[Candidate]
-    ) -> (int, int, int):
-        weight_total = 0
-        weights = []
-        indexes = []
+    ) -> Tuple[list[float], list[int], float]:
+        weight_total: float = 0.0
+        weights: list[float] = []
+        indexes: list[int] = []
+
         for i, candidate in enumerate(sorted_candidates):
             weights.append(candidate.get_adaptation_score())
             indexes.append(i)
@@ -75,13 +78,15 @@ class TournamentSelectionFunction(SelectionFunctionBase):
 
     def __evaluate_local_tournament(
         self, candidates: list[Candidate], tournament_size: int
-    ) -> list[Candidate]:
+    ) -> Candidate:
         tournament_candidates_indexes: list[int] = list(range(0, len(candidates)))
         random.shuffle(tournament_candidates_indexes)
 
-        local_tournament_winners = tournament_candidates_indexes[:tournament_size]
-        highest_adaptation_score = 0
-        winning_candidate_index = 0
+        local_tournament_winners: list[int] = tournament_candidates_indexes[
+            :tournament_size
+        ]
+        highest_adaptation_score: float = 0.0
+        winning_candidate_index: int = 0
         for candidate_index in local_tournament_winners:
             if (
                 candidates[candidate_index].get_adaptation_score()
@@ -115,8 +120,8 @@ class RankSelectionFunction(SelectionFunctionBase):
 class SelectionFunctionFactory:
     @staticmethod
     def create(function_type: str):
-        function_type = SelectionFunctionType[function_type]
-        match function_type:
+        concrete_function_type = SelectionFunctionType[function_type]
+        match concrete_function_type:
             case SelectionFunctionType.ROULETTE:
                 return RouletteSelectionFunction()
             case SelectionFunctionType.TOURNAMENT:

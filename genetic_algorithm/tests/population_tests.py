@@ -34,10 +34,10 @@ def create_selection_function_mock(candidates_list):
     return mock
 
 
-def create_population_config(adaptation_function, double_point_crossover_enabled):
+def create_population_config(selection_function, double_point_crossover_enabled):
     return PopulationConfig(
         population_size=EXPECTED_CANDIDATES_SIZE,
-        adaptation_function=adaptation_function,
+        selection_function=selection_function,
         entries_count=1,
         backpack_limit=0,
         backpack_entries=[],

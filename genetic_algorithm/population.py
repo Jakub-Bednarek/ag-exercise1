@@ -48,8 +48,8 @@ class Population:
 
         return generated_population
 
-    def run_calculation_step(self) -> int:
-        best_candidate_adaptation = 0
+    def run_calculation_step(self) -> float:
+        best_candidate_adaptation = 0.0
 
         for candidate in self.candidates:
             candidate.calculate_adaptation_score(
@@ -89,7 +89,7 @@ class Population:
         for candidate in candidates:
             candidate.mutate()
 
-    def __select_new_candidates(self) -> str:
+    def __select_new_candidates(self) -> list[Candidate]:
         return self.config.selection_function.select(self.candidates)
 
     def __str__(self) -> str:
@@ -101,10 +101,10 @@ class Population:
 
 def simulate_population(
     population_config: PopulationConfig, iterations: int
-) -> list[int]:
+) -> list[float]:
     population = Population(population_config)
 
-    simulation_results: list[int] = []
+    simulation_results: list[float] = []
     n_steps_simulated = 0
     while n_steps_simulated < iterations:
         best_candidate_adaptation = population.run_calculation_step()

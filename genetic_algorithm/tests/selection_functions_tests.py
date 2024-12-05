@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from genetic_algorithm.candidate import Candidate
-from genetic_algorithm.adaptation_functions import (
+from genetic_algorithm.selection_functions import (
     RouletteSelectionFunction,
     TournamentSelectionFunction,
     RankSelectionFunction,
@@ -96,17 +96,14 @@ class TestRouletteSelectionFunction(unittest.TestCase):
         self.assertEqual(res, ZERO_SCORE_TEST_CANDIDATES)
 
 
-@staticmethod
 def minimum_return_randint(lower_bound, upper_bound):
     return 1
 
 
-@staticmethod
 def maximum_return_randint(lower_bound, upper_bound):
     return 4
 
 
-@staticmethod
 def shuffle_mock(input_list):
     input_list[0] = 3
     input_list[1] = 2
