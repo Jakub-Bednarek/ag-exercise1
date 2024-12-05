@@ -14,6 +14,7 @@ DUMMY_BACKPACK_VALUES = [
 
 LOW_BACKPACK_STORAGE_SIZE = 10
 HIGH_BACKPACK_STORAGE_SIZE = 40
+DEFAULT_MUTATION_PROBABILITY = 0.1
 
 
 def always_zero_random():
@@ -39,7 +40,7 @@ def one_point_crossover_randint(x, y):
 class TestCandidate(unittest.TestCase):
     def test_candidate_should_return_valid_adaptation_score(self):
         expected_adaptation_score = 51
-        test_candidate = Candidate(chromosomes=[1, 1, 1, 1, 1])
+        test_candidate = Candidate([1, 1, 1, 1, 1], DEFAULT_MUTATION_PROBABILITY)
 
         test_candidate.calculate_adaptation_score(
             DUMMY_BACKPACK_VALUES, HIGH_BACKPACK_STORAGE_SIZE
@@ -51,7 +52,7 @@ class TestCandidate(unittest.TestCase):
 
     def test_candidate_should_return_zero_adaptation_score(self):
         expected_adaptation_score = 0
-        test_candidate = Candidate(chromosomes=[1, 1, 1, 1, 1])
+        test_candidate = Candidate([1, 1, 1, 1, 1], DEFAULT_MUTATION_PROBABILITY)
 
         test_candidate.calculate_adaptation_score(
             DUMMY_BACKPACK_VALUES, LOW_BACKPACK_STORAGE_SIZE
@@ -64,7 +65,7 @@ class TestCandidate(unittest.TestCase):
     def test_candidate_should_raise_when_backpack_entries_size_does_not_match_chromosomes_size(
         self,
     ):
-        test_candidate = Candidate(chromosomes=[1, 1, 1, 1, 1, 1])
+        test_candidate = Candidate([1, 1, 1, 1, 1, 1], DEFAULT_MUTATION_PROBABILITY)
 
         with self.assertRaises(InvalidBackpackEntriesSizeException):
             test_candidate.calculate_adaptation_score(
@@ -75,7 +76,7 @@ class TestCandidate(unittest.TestCase):
     def test_candidate_should_mutate_all_chromosomes(self):
         pre_mutation_adaptation_score = 51
         post_mutation_adaptation_score = 0
-        test_candidate = Candidate(chromosomes=[1, 1, 1, 1, 1])
+        test_candidate = Candidate([1, 1, 1, 1, 1], DEFAULT_MUTATION_PROBABILITY)
 
         self.assertEqual(
             test_candidate.calculate_adaptation_score(
@@ -96,7 +97,7 @@ class TestCandidate(unittest.TestCase):
     @patch("random.random", always_one_random)
     def test_candidate_should_not_mutate_any_chromosome(self):
         expected_adaptation_score = 51
-        test_candidate = Candidate(chromosomes=[1, 1, 1, 1, 1])
+        test_candidate = Candidate([1, 1, 1, 1, 1], DEFAULT_MUTATION_PROBABILITY)
 
         self.assertEqual(
             test_candidate.calculate_adaptation_score(
@@ -120,8 +121,12 @@ class TestCandidate(unittest.TestCase):
     ):
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 30
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         self.assertEqual(
             first_crossover_parent.calculate_adaptation_score(
@@ -147,8 +152,12 @@ class TestCandidate(unittest.TestCase):
     ):
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 20
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         self.assertEqual(
             first_crossover_parent.calculate_adaptation_score(
@@ -174,8 +183,12 @@ class TestCandidate(unittest.TestCase):
     ):
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 26
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         self.assertEqual(
             first_crossover_parent.calculate_adaptation_score(
@@ -202,8 +215,12 @@ class TestCandidate(unittest.TestCase):
 
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 50
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         with patch("random.randint", randint_mock):
             self.assertEqual(
@@ -229,8 +246,12 @@ class TestCandidate(unittest.TestCase):
     ):
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 20
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         randint_mock = Mock(side_effect=[0, 5])
         with patch("random.randint", randint_mock):
@@ -258,8 +279,12 @@ class TestCandidate(unittest.TestCase):
     ):
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 20
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         randint_mock = Mock(side_effect=[0, 3])
         with patch("random.randint", randint_mock):
@@ -286,8 +311,12 @@ class TestCandidate(unittest.TestCase):
     ):
         pre_crossover_adaptation_score = 46
         post_crossover_adaptation_score = 26
-        first_crossover_parent = Candidate([1, 1, 1, 0, 1])
-        second_crossover_parent = Candidate([0, 1, 0, 1, 0])
+        first_crossover_parent = Candidate(
+            [1, 1, 1, 0, 1], DEFAULT_MUTATION_PROBABILITY
+        )
+        second_crossover_parent = Candidate(
+            [0, 1, 0, 1, 0], DEFAULT_MUTATION_PROBABILITY
+        )
 
         randint_mock = Mock(side_effect=[4, 5])
         with patch("random.randint", randint_mock):

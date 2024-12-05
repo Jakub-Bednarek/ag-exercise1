@@ -1,5 +1,6 @@
 import random
 import os
+import matplotlib.pyplot as plt
 
 
 from genetic_algorithm.selection_functions import (
@@ -11,7 +12,6 @@ from genetic_algorithm.helpers.data_loader import ProgramData, load_data
 
 DATA_PATH = r"data/"
 SMALL_DATA_PATH = os.path.join(DATA_PATH, r"low_dimensional")
-LARGE_DATA_PATH = f"{DATA_PATH}/large_scale/"
 
 SMALL_DATA_FILE_0 = os.path.join(SMALL_DATA_PATH, r"file_1.txt")
 SMALL_DATA_FILE_1 = os.path.join(SMALL_DATA_PATH, r"file_2.txt")
@@ -37,18 +37,20 @@ SMALL_DATA_FILES = [
     SMALL_DATA_FILE_9,
 ]
 
-LARGE_DATA_FILE_0 = f"{LARGE_DATA_PATH}/knapPI_1_10000_1000_1"
-LARGE_DATA_FILE_1 = f"{LARGE_DATA_PATH}/knapPI_1_1000_1000_1"
-LARGE_DATA_FILE_2 = f"{LARGE_DATA_PATH}/knapPI_1_100_1000_1"
-LARGE_DATA_FILE_3 = f"{LARGE_DATA_PATH}/knapPI_1_2000_1000_1"
-LARGE_DATA_FILE_4 = f"{LARGE_DATA_PATH}/knapPI_1_200_1000_1"
-LARGE_DATA_FILE_5 = f"{LARGE_DATA_PATH}/knapPI_1_5000_1000_1"
-LARGE_DATA_FILE_6 = f"{LARGE_DATA_PATH}/knapPI_1_500_1000_1"
-LARGE_DATA_FILE_7 = f"{LARGE_DATA_PATH}/knapPI_2_1000_1000_1"
-LARGE_DATA_FILE_8 = f"{LARGE_DATA_PATH}/knapPI_2_100_1000_1"
-LARGE_DATA_FILE_9 = f"{LARGE_DATA_PATH}/knapPI_2_2000_1000_1"
-LARGE_DATA_FILE_10 = f"{LARGE_DATA_PATH}/knapPI_2_200_1000_1"
-LARGE_DATA_FILE_11 = f"{LARGE_DATA_PATH}/knapPI_2_500_1000_1"
+LARGE_DATA_PATH = os.path.join(DATA_PATH, r"large_scale")
+
+LARGE_DATA_FILE_0 = os.path.join(LARGE_DATA_PATH, r"file_1.txt")
+LARGE_DATA_FILE_1 = os.path.join(LARGE_DATA_PATH, r"file_2.txt")
+LARGE_DATA_FILE_2 = os.path.join(LARGE_DATA_PATH, r"file_3.txt")
+LARGE_DATA_FILE_3 = os.path.join(LARGE_DATA_PATH, r"file_4.txt")
+LARGE_DATA_FILE_4 = os.path.join(LARGE_DATA_PATH, r"file_5.txt")
+LARGE_DATA_FILE_5 = os.path.join(LARGE_DATA_PATH, r"file_6.txt")
+LARGE_DATA_FILE_6 = os.path.join(LARGE_DATA_PATH, r"file_7.txt")
+LARGE_DATA_FILE_7 = os.path.join(LARGE_DATA_PATH, r"file_8.txt")
+LARGE_DATA_FILE_8 = os.path.join(LARGE_DATA_PATH, r"file_9.txt")
+LARGE_DATA_FILE_9 = os.path.join(LARGE_DATA_PATH, r"file_10.txt")
+LARGE_DATA_FILE_10 = os.path.join(LARGE_DATA_PATH, r"file_11.txt")
+LARGE_DATA_FILE_11 = os.path.join(LARGE_DATA_PATH, r"file_12.txt")
 
 LARGE_DATA_FILES = [
     LARGE_DATA_FILE_0,
@@ -70,8 +72,14 @@ DEFAULT_SIMULATION_ITERATIONS = 1000
 
 OUTPUT_DIR = "output/"
 
-def draw_simulation_plot(simulation_results, output_file):
-    pass
+
+def draw_single_simulation_plot(simulation_results, output_file):
+    fig, ax = plt.subplots()
+    ax.plot(range(0, len(simulation_results)), simulation_results)
+
+    plt.savefig(output_file)
+    plt.close()
+
 
 def run_simulation(
     population_size: int,
@@ -83,7 +91,12 @@ def run_simulation(
     draw_plot=False,
     output_file="",
 ):
-    program_data = load_data(input_file)
+    try:
+        program_data = load_data(input_file)
+    except Exception as e:
+        print(e)
+        return []
+
     population_config = PopulationConfig(
         population_size,
         SelectionFunctionFactory.create(selection_function_type),
@@ -97,26 +110,60 @@ def run_simulation(
 
     print("------Starting simulation------")
 
-    simulation_results = simulate_population(population_config, iterations_count)
+    try:
+        simulation_results = simulate_population(population_config, iterations_count)
+    except Exception as e:
+        print(f"Simulation failed: {e}")
+        return []
 
     if draw_plot:
-        draw_simulation_plot(simulation_results)
+        draw_single_simulation_plot(simulation_results, output_file)
 
     return simulation_results
 
 
 def run_simulation_on_all_test_data_files():
-    mutation_probability = random.random()
-    crossover_probability = random.random()
+    SMALL_DATA_OUTPUT = "example/output/all_tests/low_dimensional"
+    LARGE_DATA_OUTPUT = "example/output/all_test/high_dimensional"
+
+    if not os.path.exists(SMALL_DATA_OUTPUT):
+        os.makedirs(SMALL_DATA_OUTPUT)
 
     for input_file in SMALL_DATA_FILES:
+        mutation_probability = random.random()
+        crossover_probability = random.random()
+
+        output_file_name = os.path.splitext(os.path.basename(input_file))[0] + ".png"
+
         run_simulation(
-            DEFAULT_POPULATION_SIZE,
-            SelectionFunctionType.RANK,
+            10,
+            SelectionFunctionType.TOURNAMENT,
             input_file,
-            1000,
+            100,
             mutation_probability,
             crossover_probability,
+            True,
+            os.path.join(SMALL_DATA_OUTPUT, output_file_name),
+        )
+
+    if not os.path.exists(LARGE_DATA_OUTPUT):
+        os.makedirs(LARGE_DATA_OUTPUT)
+
+    for input_file in LARGE_DATA_FILES:
+        mutation_probability = random.random()
+        crossover_probability = random.random()
+
+        output_file_name = os.path.splitext(os.path.basename(input_file))[0] + ".png"
+
+        run_simulation(
+            10,
+            SelectionFunctionType.TOURNAMENT,
+            input_file,
+            100,
+            mutation_probability,
+            crossover_probability,
+            True,
+            os.path.join(LARGE_DATA_OUTPUT, output_file_name),
         )
 
 

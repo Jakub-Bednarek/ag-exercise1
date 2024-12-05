@@ -38,10 +38,12 @@ def create_population_config(selection_function, double_point_crossover_enabled)
     return PopulationConfig(
         population_size=EXPECTED_CANDIDATES_SIZE,
         selection_function=selection_function,
-        entries_count=1,
+        backpack_entries_count=1,
         backpack_limit=0,
         backpack_entries=[],
         double_point_crossover_enabled=double_point_crossover_enabled,
+        mutation_probability=0.0,
+        crossover_probability=0.0,
     )
 
 

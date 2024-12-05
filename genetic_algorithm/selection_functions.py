@@ -1,4 +1,5 @@
 import random
+import copy
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
@@ -43,7 +44,9 @@ class RouletteSelectionFunction(SelectionFunctionBase):
             indexes, weights, k=len(candidates)
         )
 
-        return [candidates[index] for index in selected_candidates_indexes]
+        return [
+            copy.deepcopy(candidates[index]) for index in selected_candidates_indexes
+        ]
 
     def __create_weights_and_indexes(
         self, sorted_candidates: list[Candidate]
@@ -97,7 +100,7 @@ class TournamentSelectionFunction(SelectionFunctionBase):
                 ].get_adaptation_score()
                 winning_candidate_index = candidate_index
 
-        return candidates[winning_candidate_index]
+        return copy.deepcopy(candidates[winning_candidate_index])
 
 
 class RankSelectionFunction(SelectionFunctionBase):
@@ -114,7 +117,9 @@ class RankSelectionFunction(SelectionFunctionBase):
             k=len(candidates),
         )
 
-        return [candidates[index] for index in selected_candidates_indexes]
+        return [
+            copy.deepcopy(candidates[index]) for index in selected_candidates_indexes
+        ]
 
 
 class SelectionFunctionFactory:
