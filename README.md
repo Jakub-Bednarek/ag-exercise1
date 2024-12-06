@@ -46,7 +46,7 @@ The most significant difference visible is that lower probability chance yields 
 Similar results can be seen in large scale datasets. The form is slightly different due to very strict constrain on total backpack size resulting in extremely fast degradation of candidates fitness.\
 For 8% and 10% mutation probability, second iteration already brought highest score to 0 which stayed for the rest of simulation.\
 6% and 4% runs were slightly better, 0 fitness level was achieved after 4th and 6th iteration respectively.\
-Last mutation probability candidate - 2%, yield completely different results. Instead of degrading the score it actually improves it with each iteration reaching close to 6500 fitness score mark.\
+Last mutation probability candidate - 2%, yield completely different results. Instead of degrading the score it actually improves it with each iteration reaching close to 6500 fitness score mark.
 #### Crossover results
 `Low-Dimensional-Data`
 ![low_dimensional_crossover_results](example/output/mutation_crossover/crossover/low_dimensional/file_1_results.png)
@@ -87,7 +87,7 @@ This time, we can see slight domination of single point crossover over double po
 ![high_dimensional_single_vs_double_crossover_results](example/output/single_vs_double_point_crossover/high_dimensional/file_9_results.png)
 \
 As a finishing note, as the name implies - high risk, high reward can impact the population so bad, that it can have very difficult time recovering from such occurrence. The case presented above shows that 5th iteration decreased highest fitness score.\
-Additionally, population was not able to achieve significant increase over remaining 5 iterations, closing the simulation at very similar level to iteration 4.\
+Additionally, population was not able to achieve significant increase over remaining 5 iterations, closing the simulation at very similar level to iteration 4.
 ### Rank, roulette and tournament selection function comparison
 `Low-Dimensional-Data`![low_dimensional_rank_vs_roulette_vs_tournament_results](example/output/rank_vs_roulette_vs_tournament/low_dimensional/file_2_results.png)
 \
