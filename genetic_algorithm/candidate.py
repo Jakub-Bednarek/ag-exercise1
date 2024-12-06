@@ -9,6 +9,8 @@ class InvalidBackpackEntriesSizeException(Exception):
 
 
 class Candidate:
+    POSITIVE_BIT_GENERATION_CHANCE = 0.001
+
     def __init__(self, chromosomes: list[bool], mutation_probability: float):
         self.chromosomes: list[bool] = chromosomes
         self.chromosomes_count: int = len(self.chromosomes)
@@ -119,6 +121,9 @@ class Candidate:
     def generate_random(entries_count: int, mutation_probability: float):
         generated_chromosomes: list[bool] = []
         for i in range(0, entries_count):
-            generated_chromosomes.append(bool(random.getrandbits(1)))
+            random_value = random.random()
+            generated_chromosomes.append(
+                random_value < Candidate.POSITIVE_BIT_GENERATION_CHANCE
+            )
 
         return Candidate(generated_chromosomes, mutation_probability)

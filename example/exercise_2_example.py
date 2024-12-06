@@ -13,19 +13,18 @@ from genetic_algorithm.helpers.data_loader import ProgramData, load_data
 DATA_PATH = r"data/"
 SMALL_DATA_PATH = os.path.join(DATA_PATH, r"low_dimensional")
 
-SMALL_DATA_FILE_0 = os.path.join(SMALL_DATA_PATH, r"file_1.txt")
-SMALL_DATA_FILE_1 = os.path.join(SMALL_DATA_PATH, r"file_2.txt")
-SMALL_DATA_FILE_2 = os.path.join(SMALL_DATA_PATH, r"file_3.txt")
-SMALL_DATA_FILE_3 = os.path.join(SMALL_DATA_PATH, r"file_4.txt")
-SMALL_DATA_FILE_4 = os.path.join(SMALL_DATA_PATH, r"file_5.txt")
-SMALL_DATA_FILE_5 = os.path.join(SMALL_DATA_PATH, r"file_6.txt")
-SMALL_DATA_FILE_6 = os.path.join(SMALL_DATA_PATH, r"file_7.txt")
-SMALL_DATA_FILE_7 = os.path.join(SMALL_DATA_PATH, r"file_8.txt")
-SMALL_DATA_FILE_8 = os.path.join(SMALL_DATA_PATH, r"file_9.txt")
-SMALL_DATA_FILE_9 = os.path.join(SMALL_DATA_PATH, r"file_10.txt")
+SMALL_DATA_FILE_1 = os.path.join(SMALL_DATA_PATH, r"file_1.txt")
+SMALL_DATA_FILE_2 = os.path.join(SMALL_DATA_PATH, r"file_2.txt")
+SMALL_DATA_FILE_3 = os.path.join(SMALL_DATA_PATH, r"file_3.txt")
+SMALL_DATA_FILE_4 = os.path.join(SMALL_DATA_PATH, r"file_4.txt")
+SMALL_DATA_FILE_5 = os.path.join(SMALL_DATA_PATH, r"file_5.txt")
+SMALL_DATA_FILE_6 = os.path.join(SMALL_DATA_PATH, r"file_6.txt")
+SMALL_DATA_FILE_7 = os.path.join(SMALL_DATA_PATH, r"file_7.txt")
+SMALL_DATA_FILE_8 = os.path.join(SMALL_DATA_PATH, r"file_8.txt")
+SMALL_DATA_FILE_9 = os.path.join(SMALL_DATA_PATH, r"file_9.txt")
+SMALL_DATA_FILE_10 = os.path.join(SMALL_DATA_PATH, r"file_10.txt")
 
 SMALL_DATA_FILES = [
-    SMALL_DATA_FILE_0,
     SMALL_DATA_FILE_1,
     SMALL_DATA_FILE_2,
     SMALL_DATA_FILE_3,
@@ -35,25 +34,25 @@ SMALL_DATA_FILES = [
     SMALL_DATA_FILE_7,
     SMALL_DATA_FILE_8,
     SMALL_DATA_FILE_9,
+    SMALL_DATA_FILE_10,
 ]
 
 LARGE_DATA_PATH = os.path.join(DATA_PATH, r"large_scale")
 
-LARGE_DATA_FILE_0 = os.path.join(LARGE_DATA_PATH, r"file_1.txt")
-LARGE_DATA_FILE_1 = os.path.join(LARGE_DATA_PATH, r"file_2.txt")
-LARGE_DATA_FILE_2 = os.path.join(LARGE_DATA_PATH, r"file_3.txt")
-LARGE_DATA_FILE_3 = os.path.join(LARGE_DATA_PATH, r"file_4.txt")
-LARGE_DATA_FILE_4 = os.path.join(LARGE_DATA_PATH, r"file_5.txt")
-LARGE_DATA_FILE_5 = os.path.join(LARGE_DATA_PATH, r"file_6.txt")
-LARGE_DATA_FILE_6 = os.path.join(LARGE_DATA_PATH, r"file_7.txt")
-LARGE_DATA_FILE_7 = os.path.join(LARGE_DATA_PATH, r"file_8.txt")
-LARGE_DATA_FILE_8 = os.path.join(LARGE_DATA_PATH, r"file_9.txt")
-LARGE_DATA_FILE_9 = os.path.join(LARGE_DATA_PATH, r"file_10.txt")
-LARGE_DATA_FILE_10 = os.path.join(LARGE_DATA_PATH, r"file_11.txt")
-LARGE_DATA_FILE_11 = os.path.join(LARGE_DATA_PATH, r"file_12.txt")
+LARGE_DATA_FILE_1 = os.path.join(LARGE_DATA_PATH, r"file_1.txt")
+LARGE_DATA_FILE_2 = os.path.join(LARGE_DATA_PATH, r"file_2.txt")
+LARGE_DATA_FILE_3 = os.path.join(LARGE_DATA_PATH, r"file_3.txt")
+LARGE_DATA_FILE_4 = os.path.join(LARGE_DATA_PATH, r"file_4.txt")
+LARGE_DATA_FILE_5 = os.path.join(LARGE_DATA_PATH, r"file_5.txt")
+LARGE_DATA_FILE_6 = os.path.join(LARGE_DATA_PATH, r"file_6.txt")
+LARGE_DATA_FILE_7 = os.path.join(LARGE_DATA_PATH, r"file_7.txt")
+LARGE_DATA_FILE_8 = os.path.join(LARGE_DATA_PATH, r"file_8.txt")
+LARGE_DATA_FILE_9 = os.path.join(LARGE_DATA_PATH, r"file_9.txt")
+LARGE_DATA_FILE_10 = os.path.join(LARGE_DATA_PATH, r"file_10.txt")
+LARGE_DATA_FILE_11 = os.path.join(LARGE_DATA_PATH, r"file_11.txt")
+LARGE_DATA_FILE_12 = os.path.join(LARGE_DATA_PATH, r"file_12.txt")
 
 LARGE_DATA_FILES = [
-    LARGE_DATA_FILE_0,
     LARGE_DATA_FILE_1,
     LARGE_DATA_FILE_2,
     LARGE_DATA_FILE_3,
@@ -65,14 +64,15 @@ LARGE_DATA_FILES = [
     LARGE_DATA_FILE_9,
     LARGE_DATA_FILE_10,
     LARGE_DATA_FILE_11,
+    LARGE_DATA_FILE_12,
 ]
 
 SMALL_POPULATION_SIZE = 30
-SMALL_POPULATION_ITERATION_COUNT = 1000
-LARGE_POPULATION_SIZE = 1000000
+SMALL_POPULATION_ITERATION_COUNT = 400
+LARGE_POPULATION_SIZE = 3000
 LARGE_POPULATION_ITERATION_COUNT = 10
-DEFAULT_MUTATION_PROBABILITY = 0.2
-DEFAULT_CROSSOVER_PROBABILITY = 0.5
+DEFAULT_MUTATION_PROBABILITY = 0.01
+DEFAULT_CROSSOVER_PROBABILITY = 0.1
 
 OUTPUT_DIR = "output/"
 
@@ -127,6 +127,11 @@ def draw_single_plot_with_multiple_datasets(
     print(f"\n - Plot file saved to: {output_file}")
 
 
+def create_if_does_not_exist(path: str):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
 def run_simulation(
     population_size: int,
     selection_function_type: SelectionFunctionType,
@@ -171,7 +176,9 @@ def run_simulation(
         return []
 
     if draw_plot:
-        draw_single_simulation_plot(simulation_results, output_file)
+        draw_single_simulation_plot(
+            simulation_results, f"{input_file} simulation", output_file
+        )
 
     print("\n------Simulation Finished------")
 
@@ -223,257 +230,299 @@ def run_simulation_on_all_test_data_files():
 
 
 def run_mutation_and_crossover_simulation():
-    simulations_count = 5
-    small_data_output = "example/output/mutation_crossover/low_dimensional/"
-    large_data_output = "example/output/mutation_crossover/high_dimensional/"
-    small_mutation_data_output_file = os.path.join(
-        small_data_output, "small_mutation__simulation.png"
-    )
-    small_crossover_data_output_file = os.path.join(
-        small_data_output, "small_crossover_simulation.png"
-    )
-    large_mutation_data_output_file = os.path.join(
-        large_data_output, "large_mutation__simulation.png"
-    )
-    large_crossover_data_output_file = os.path.join(
-        large_data_output, "large_crossover_simulation.png"
-    )
-
-    if not os.path.exists(small_data_output):
-        os.makedirs(small_data_output)
-
-    if not os.path.exists(large_data_output):
-        os.makedirs(large_data_output)
-
-    small_data_mutation_results = []
-    mutation_probability = [0.02, 0.04, 0.06, 0.08, 0.1]
-    for i in range(0, simulations_count):
-        result = run_simulation(
-            SMALL_POPULATION_SIZE,
-            SelectionFunctionType.ROULETTE,
-            SMALL_DATA_FILE_4,
-            SMALL_POPULATION_ITERATION_COUNT,
-            mutation_probability[i],
-            DEFAULT_CROSSOVER_PROBABILITY,
-            draw_plot=False,
+    def run_sim(
+        output_dir: str,
+        input_files: list[str],
+        run_type: str,
+        mutation_probabilities: list[float] = [],
+        crossover_probabilities: list[float] = [],
+    ):
+        simulations_count = 5
+        module_dir = "example/output/mutation_crossover/"
+        full_output_dir = os.path.join(
+            module_dir,
+            f"{'mutation' if mutation_probabilities != [] else 'crossover' }",
+            output_dir,
         )
 
-        small_data_mutation_results.append(
-            PlottableDataset(
-                result, f"m_{mutation_probability}_c_{crossover_probability}"
+        for file in input_files:
+            output_file_name = (
+                os.path.splitext(os.path.basename(file))[0] + "_results.png"
             )
-        )
+            full_output_file = os.path.join(full_output_dir, output_file_name)
 
-    draw_single_plot_with_multiple_datasets(
-        small_data_mutation_results,
-        "Mutation impact on small data set",
-        small_mutation_data_output_file,
+            create_if_does_not_exist(full_output_dir)
+
+            simulation_results = []
+            for i in range(0, simulations_count):
+                result = run_simulation(
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE,
+                    SelectionFunctionType.ROULETTE,
+                    file,
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT,
+                    mutation_probabilities[i]
+                    if mutation_probabilities != []
+                    else DEFAULT_MUTATION_PROBABILITY,
+                    crossover_probabilities[i]
+                    if crossover_probabilities != []
+                    else DEFAULT_CROSSOVER_PROBABILITY,
+                    draw_plot=False,
+                )
+
+                simulation_results.append(
+                    PlottableDataset(
+                        result,
+                        f"{run_type}_{mutation_probabilities[i] if mutation_probabilities != [] else crossover_probabilities[i]}",
+                    )
+                )
+
+            draw_single_plot_with_multiple_datasets(
+                simulation_results,
+                f"{'Mutation' if mutation_probabilities != [] else 'Crossover'} impact on population",
+                full_output_file,
+            )
+
+    run_sim(
+        "low_dimensional",
+        [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        "low_dimensional",
+        mutation_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
-
-    large_data_mutation_results = []
-    for i in range(0, simulations_count):
-        result = run_simulation(
-            LARGE_POPULATION_SIZE,
-            SelectionFunctionType.ROULETTE,
-            LARGE_DATA_FILE_2,
-            LARGE_POPULATION_ITERATION_COUNT,
-            mutation_probability[i],
-            DEFAULT_CROSSOVER_PROBABILITY,
-            draw_plot=False,
-        )
-
-        large_data_mutation_results.append(
-            PlottableDataset(result, f"mutation_{mutation_probability[i]}")
-        )
-
-    draw_single_plot_with_multiple_datasets(
-        large_data_mutation_results,
-        "Mutation impact on small data set",
-        large_mutation_data_output_file,
+    run_sim(
+        "high_dimensional",
+        [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
+        "high_dimensional",
+        mutation_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
-
-    crossover_probability = [0.02, 0.04, 0.06, 0.08, 0.1]
-    small_data_crossover_results = []
-    mutation_probability = [0.02, 0.04, 0.06, 0.08, 0.1]
-    for i in range(0, simulations_count):
-        result = run_simulation(
-            SMALL_POPULATION_SIZE,
-            SelectionFunctionType.ROULETTE,
-            SMALL_DATA_FILE_4,
-            SMALL_POPULATION_ITERATION_COUNT,
-            DEFAULT_MUTATION_PROBABILITY,
-            crossover_probability[i],
-            draw_plot=False,
-        )
-
-        small_data_crossover_results.append(
-            PlottableDataset(result, f"crossover_{crossover_probability[i]}")
-        )
-
-    draw_single_plot_with_multiple_datasets(
-        small_data_crossover_results,
-        "Mutation impact on small data set",
-        small_crossover_data_output_file,
+    run_sim(
+        "low_dimensional",
+        [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        "low_dimensional",
+        crossover_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
-
-    large_data_crossover_results = []
-    for i in range(0, simulations_count):
-        result = run_simulation(
-            LARGE_POPULATION_SIZE,
-            SelectionFunctionType.ROULETTE,
-            LARGE_DATA_FILE_2,
-            LARGE_POPULATION_ITERATION_COUNT,
-            DEFAULT_MUTATION_PROBABILITY,
-            crossover_probability[i],
-            draw_plot=False,
-        )
-
-        large_data_crossover_results.append(
-            PlottableDataset(result, f"crossover_{crossover_probability[i]}")
-        )
-
-    draw_single_plot_with_multiple_datasets(
-        large_data_crossover_results,
-        "Mutation impact on small data set",
-        large_crossover_data_output_file,
+    run_sim(
+        "high_dimensional",
+        [LARGE_DATA_FILE_9, LARGE_DATA_FILE_9],
+        "high_dimensional",
+        crossover_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
 
 
 def run_rank_and_roulette_simulation():
-    simulations_results = []
-    data_output_path = "example/output/rank_and_roulette/"
-    data_output_file = os.path.join(data_output_path, "rank_and_roulette.png")
+    def run_sim(output_dir: str, input_files: list[str], run_type):
+        module_dir = "example/output/rank_vs_roulette/"
+        full_output_dir = os.path.join(module_dir, output_dir)
 
-    if not os.path.exists(data_output_path):
-        os.makedirs(data_output_path)
+        for file in input_files:
+            output_file_name = (
+                os.path.splitext(os.path.basename(file))[0] + "_results.png"
+            )
+            full_output_file = os.path.join(full_output_dir, output_file_name)
 
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.RANK,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        draw_plot=False,
-        output_file=data_output_file,
+            create_if_does_not_exist(full_output_dir)
+
+            simulation_results = []
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.RANK,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+            )
+
+            simulation_results.append(PlottableDataset(result, "rank_selection"))
+
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.ROULETTE,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+            )
+
+            simulation_results.append(PlottableDataset(result, "roulette_selection"))
+
+            draw_single_plot_with_multiple_datasets(
+                simulation_results,
+                "Rank vs Roulette selection algorithms",
+                full_output_file,
+            )
+
+    run_sim(
+        "low_dimensional",
+        [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        "low_dimensional",
     )
-
-    simulations_results.append(PlottableDataset(result, f"rank_selection"))
-
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.ROULETTE,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        draw_plot=False,
-        output_file=data_output_file,
-    )
-
-    simulations_results.append(PlottableDataset(result, f"roulette_selection"))
-
-    draw_single_plot_with_multiple_datasets(
-        simulations_results, "Rank vs roulette selection comparison", data_output_file
+    run_sim(
+        "high_dimensional", [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9], "high_dimensional"
     )
 
 
 def run_single_and_double_point_crossover_simulation():
-    simulations_results = []
-    data_output_path = "example/output/mutation_crossover/"
-    data_output_file = os.path.join(
-        data_output_path, "mutation_crossover_simulation.png"
+    def run_sim(output_dir: str, input_files: list[str], run_type):
+        module_dir = "example/output/single_vs_double_point_crossover/"
+        full_output_dir = os.path.join(module_dir, output_dir)
+
+        for file in input_files:
+            output_file_name = (
+                os.path.splitext(os.path.basename(file))[0] + "_results.png"
+            )
+            full_output_file = os.path.join(full_output_dir, output_file_name)
+
+            create_if_does_not_exist(full_output_dir)
+
+            simulation_results = []
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.ROULETTE,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+                double_point_crossover_enabled=False,
+            )
+
+            simulation_results.append(
+                PlottableDataset(result, "single_point_crossover")
+            )
+
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.ROULETTE,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+                double_point_crossover_enabled=True,
+            )
+
+            simulation_results.append(
+                PlottableDataset(result, "double_point_crossover")
+            )
+
+            draw_single_plot_with_multiple_datasets(
+                simulation_results,
+                "Single vs Double point crossover",
+                full_output_file,
+            )
+
+    run_sim(
+        "low_dimensional",
+        [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        "low_dimensional",
     )
-
-    if not os.path.exists(data_output_path):
-        os.makedirs(data_output_path)
-
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.TOURNAMENT,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        draw_plot=False,
-    )
-
-    simulations_results.append(PlottableDataset(result, f"single_point_crossover"))
-
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.TOURNAMENT,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        double_point_crossover_enabled=True,
-        draw_plot=False,
-    )
-
-    simulations_results.append(PlottableDataset(result, f"double_point_crossover"))
-
-    draw_single_plot_with_multiple_datasets(
-        simulations_results, "Single vs double crossover comparison", data_output_file
+    run_sim(
+        "high_dimensional", [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9], "high_dimensional"
     )
 
 
 def run_rank_roulette_and_tournament_simulation():
-    simulations_results = []
-    data_output_path = "example/output/rank_roulette_tournament/"
-    data_output_file = os.path.join(
-        data_output_path, "rank_roulette_tournament_simulation.png"
+    def run_sim(output_dir: str, input_files: list[str], run_type):
+        module_dir = "example/output/rank_vs_roulette_vs_tournament/"
+        full_output_dir = os.path.join(module_dir, output_dir)
+
+        for file in input_files:
+            output_file_name = (
+                os.path.splitext(os.path.basename(file))[0] + "_results.png"
+            )
+            full_output_file = os.path.join(full_output_dir, output_file_name)
+
+            create_if_does_not_exist(full_output_dir)
+
+            simulation_results = []
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.RANK,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+            )
+
+            simulation_results.append(PlottableDataset(result, "rank_selection"))
+
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.ROULETTE,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+            )
+
+            simulation_results.append(PlottableDataset(result, "roulette_selection"))
+
+            result = run_simulation(
+                SMALL_POPULATION_SIZE
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_SIZE,
+                SelectionFunctionType.TOURNAMENT,
+                file,
+                SMALL_POPULATION_ITERATION_COUNT
+                if run_type == "low_dimensional"
+                else LARGE_POPULATION_ITERATION_COUNT,
+                DEFAULT_MUTATION_PROBABILITY,
+                DEFAULT_CROSSOVER_PROBABILITY,
+                draw_plot=False,
+            )
+
+            simulation_results.append(PlottableDataset(result, "tournament_selection"))
+
+            draw_single_plot_with_multiple_datasets(
+                simulation_results,
+                "Rank vs Roulette vs Tournament selection algorithms",
+                full_output_file,
+            )
+
+    run_sim(
+        "low_dimensional",
+        [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        "low_dimensional",
     )
-
-    if not os.path.exists(data_output_path):
-        os.makedirs(data_output_path)
-
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.TOURNAMENT,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        draw_plot=False,
-    )
-
-    simulations_results.append(PlottableDataset(result, f"tournament_selection"))
-
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.ROULETTE,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        draw_plot=False,
-    )
-
-    simulations_results.append(PlottableDataset(result, f"roulette_selection"))
-
-    result = run_simulation(
-        SMALL_POPULATION_SIZE,
-        SelectionFunctionType.RANK,
-        SMALL_DATA_FILE_1,
-        SMALL_POPULATION_ITERATION_COUNT,
-        DEFAULT_MUTATION_PROBABILITY,
-        DEFAULT_CROSSOVER_PROBABILITY,
-        draw_plot=False,
-    )
-
-    simulations_results.append(PlottableDataset(result, f"rank_selection"))
-
-    draw_single_plot_with_multiple_datasets(
-        simulations_results,
-        "Rank vs roulette vs tournament selection comparison",
-        data_output_file,
+    run_sim(
+        "high_dimensional", [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9], "high_dimensional"
     )
 
 
 def run_all_simulations():
-    # run_simulation_on_all_test_data_files()
-    # run_mutation_and_crossover_simulation()
+    run_simulation_on_all_test_data_files()
+    run_mutation_and_crossover_simulation()
     run_rank_and_roulette_simulation()
     run_single_and_double_point_crossover_simulation()
     run_rank_roulette_and_tournament_simulation()
