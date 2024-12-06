@@ -1,6 +1,3 @@
-# data directories
-data/
-
 # python specific
 genetic_algorithm/**/__pycache__
 example/**/__pycache__
