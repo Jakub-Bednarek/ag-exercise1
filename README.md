@@ -31,10 +31,30 @@ Each set of tests generates plot as an output, results are also available in the
 If you want to generate such output yourself, you can execute `example run` by running: `./run.py run_example`
 
 ## Results analysis
-### Configurations of simulations exectued
+### Configurations of simulations executed
 ### Mutation and crossover probability impact
 #### Mutation results
+`Low-Dimensional-Data`
+![low_dimensional_mutation_results](example/output/mutation_crossover/mutation/low_dimensional/file_1_results.png)
+Test was done using 5 values for mutation probability: 2%, 4%, 6%, 8% and 10%.
+The most significant difference visible is that lower probability chance yields more stable results over time. Each variant with mutation probability equal or higher than 6% show high variance of results, thus lowering average score for all generations.
+`High-Dimensional-Data`
+![high_dimensional_mutation_results](example/output/mutation_crossover/mutation/high_dimensional/file_5_results.png)
+Similar results can be seen in large scale datasets. The form is slightly different due to very strict constrain on total backpack size resulting in extremely fast degradation of candidates fitness.
+For 8% and 10% mutation probability, second iteration already brought highest score to 0 which stayed for the rest of simulation.
+6% and 4% runs were slightly better, 0 fitness level was achieved after 4th and 6th iteration respectively.
+Last mutation probability candidate - 2%, yield completely different results. Instead of degrading the score it actually improves it with each iteration reaching close to 6500 fitness score mark.
 #### Crossover results
+`Low-Dimensional-Data`
+![low_dimensional_crossover_results](example/output/mutation_crossover/crossover/low_dimensional/file_1_results.png)
+At first glance, crossover modification impact is not as extreme as mutation. Probabilities for mutation were exactly the same as for the mutation.
+Each run comes with very similar results which are stable, but vary in the overall level.
+Lower crossover chance allows to reach highest possible score with ease, which is kept till the end of simulation.
+For higher crossover chances, maximum score goes down by up to 10% being most significant with 10% crossover chance.  
+`High-Dimensional-Data`
+![high_dimensional_crossover_results](example/output/mutation_crossover/crossover/high_dimensional/file_5_results.png)
+Large scale dataset doesn't confirm observation from smaller size datasets. Looking at 4% crossover chance, we notice that even though it start strong being in the middle of all simulations, after 5th iteration overall score becomes the lowest among all simulations.
+Results seem to be more or less random which is very different from low dataset tests. 
 ### Rank and roulette selection function comparison
 ### Single and double point crossover comparison
 ### Rank, roulette and tournament selection function comparison
