@@ -27,12 +27,16 @@ class SelectionFunctionType(Enum):
 
 class SelectionFunctionBase(ABC):
     @abstractmethod
-    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
+    def select(
+        self, candidates: list[Candidate], target_population_size: int
+    ) -> list[Candidate]:
         pass
 
 
 class RouletteSelectionFunction(SelectionFunctionBase):
-    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
+    def select(
+        self, candidates: list[Candidate], target_population_size: int
+    ) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
@@ -67,7 +71,9 @@ class RouletteSelectionFunction(SelectionFunctionBase):
 
 
 class TournamentSelectionFunction(SelectionFunctionBase):
-    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
+    def select(
+        self, candidates: list[Candidate], target_population_size: int
+    ) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
@@ -110,7 +116,9 @@ class TournamentSelectionFunction(SelectionFunctionBase):
 
 
 class RankSelectionFunction(SelectionFunctionBase):
-    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
+    def select(
+        self, candidates: list[Candidate], target_population_size: int
+    ) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 

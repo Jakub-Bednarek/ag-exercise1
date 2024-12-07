@@ -86,17 +86,21 @@ class Population:
             while other_parent_index == i:
                 other_parent_index = random.randint(0, self.config.population_size - 1)
 
-            candidates.append(candidates[i].crossover(
-                candidates[other_parent_index],
-                self.config.double_point_crossover_enabled,
-            ))
+            candidates.append(
+                candidates[i].crossover(
+                    candidates[other_parent_index],
+                    self.config.double_point_crossover_enabled,
+                )
+            )
 
     def __apply_genetic_mutation(self, candidates: list[Candidate]):
         for candidate in candidates:
             candidate.mutate()
 
     def __select_new_candidates(self) -> list[Candidate]:
-        return self.config.selection_function.select(self.candidates, self.config.population_size)
+        return self.config.selection_function.select(
+            self.candidates, self.config.population_size
+        )
 
     def __str__(self) -> str:
         return "\n".join([str(candidate) for candidate in self.candidates])

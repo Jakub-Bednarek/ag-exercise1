@@ -54,6 +54,7 @@ def load_data(file_path: str) -> ProgramData:
 
     return program_data
 
+
 def load_optimum(file_path: str) -> ProgramData:
     file_path = os.path.abspath(file_path)
 
@@ -63,6 +64,5 @@ def load_optimum(file_path: str) -> ProgramData:
 
     if len(file_content) == 0:
         raise EmptyInputException()
-        
-    return float(file_content[0])
 
+    return float(file_content[0])

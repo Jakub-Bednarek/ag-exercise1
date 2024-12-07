@@ -24,10 +24,12 @@ SMALL_DATA_FILE_8 = os.path.join(SMALL_DATA_PATH, r"file_8.txt")
 SMALL_DATA_FILE_9 = os.path.join(SMALL_DATA_PATH, r"file_9.txt")
 SMALL_DATA_FILE_10 = os.path.join(SMALL_DATA_PATH, r"file_10.txt")
 
-SMALL_DATA_FILE_OPTIMUM_1 = os.path.join(SMALL_DATA_PATH, r"file_1.txt")
-SMALL_DATA_FILE_OPTIMUM_2 = os.path.join(SMALL_DATA_PATH, r"file_2.txt")
-SMALL_DATA_FILE_OPTIMUM_3 = os.path.join(SMALL_DATA_PATH, r"file_3.txt")
-SMALL_DATA_FILE_OPTIMUM_4 = os.path.join(SMALL_DATA_PATH, r"file_4.txt")
+SMALL_DATA_OPTIMUM_PATH = os.path.join(DATA_PATH, r"low_dimensional_optimum")
+
+SMALL_DATA_FILE_OPTIMUM_1 = os.path.join(SMALL_DATA_OPTIMUM_PATH, r"file_1.txt")
+SMALL_DATA_FILE_OPTIMUM_2 = os.path.join(SMALL_DATA_OPTIMUM_PATH, r"file_2.txt")
+SMALL_DATA_FILE_OPTIMUM_3 = os.path.join(SMALL_DATA_OPTIMUM_PATH, r"file_3.txt")
+SMALL_DATA_FILE_OPTIMUM_4 = os.path.join(SMALL_DATA_OPTIMUM_PATH, r"file_4.txt")
 
 SMALL_DATA_FILES = [
     SMALL_DATA_FILE_1,
@@ -57,8 +59,10 @@ LARGE_DATA_FILE_10 = os.path.join(LARGE_DATA_PATH, r"file_10.txt")
 LARGE_DATA_FILE_11 = os.path.join(LARGE_DATA_PATH, r"file_11.txt")
 LARGE_DATA_FILE_12 = os.path.join(LARGE_DATA_PATH, r"file_12.txt")
 
-LARGE_OPTIMUM_FILE_5 = os.path.join(LARGE_DATA_PATH, r"file_5_optimum.txt")
-LARGE_OPTIMUM_FILE_9 = os.path.join(LARGE_DATA_PATH, r"file_9_optimum.txt")
+LARGE_DATA_OPTIMUM_PATH = os.path.join(DATA_PATH, r"large_scale_optimum")
+
+LARGE_DATA_OPTIMUM_FILE_5 = os.path.join(LARGE_DATA_OPTIMUM_PATH, r"file_5.txt")
+LARGE_DATA_OPTIMUM_FILE_9 = os.path.join(LARGE_DATA_OPTIMUM_PATH, r"file_9.txt")
 
 LARGE_DATA_FILES = [
     LARGE_DATA_FILE_1,
@@ -76,9 +80,9 @@ LARGE_DATA_FILES = [
 ]
 
 SMALL_POPULATION_SIZE = 30
-SMALL_POPULATION_ITERATION_COUNT = 400
-LARGE_POPULATION_SIZE = 3000
-LARGE_POPULATION_ITERATION_COUNT = 10
+SMALL_POPULATION_ITERATION_COUNT = 100
+LARGE_POPULATION_SIZE = 10000
+LARGE_POPULATION_ITERATION_COUNT = 50
 DEFAULT_MUTATION_PROBABILITY = 0.01
 DEFAULT_CROSSOVER_PROBABILITY = 0.1
 
@@ -93,12 +97,21 @@ class PlottableDataset:
 
 
 def draw_single_simulation_plot(
-    simulation_results: list[float], plot_title: str, output_file: str, optimum
+    simulation_results: list[float],
+    plot_title: str,
+    output_file: str,
+    optimum: int = -1,
 ):
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)
     ax.plot(range(0, len(simulation_results)), simulation_results)
-    ax.plot(range(0, len(simulation_results)), [optimum for i in range(0, len(simulation_results))], "optimum")
+
+    if not optimum == -1:
+        ax.plot(
+            range(0, len(simulation_results)),
+            [optimum for i in range(0, len(simulation_results))],
+            label="optimum",
+        )
 
     ax.set_xlabel("Iterations")
     ax.set_ylabel("Adaptation score")
@@ -109,7 +122,10 @@ def draw_single_simulation_plot(
 
 
 def draw_single_plot_with_multiple_datasets(
-    plottable_datasets: PlottableDataset, plot_title: str, output_file: str, optimum
+    plottable_datasets: PlottableDataset,
+    plot_title: str,
+    output_file: str,
+    optimum: int,
 ):
     last_data_set_size = plottable_datasets[0].size
     x_axis_values = range(1, last_data_set_size + 1)
@@ -129,8 +145,10 @@ def draw_single_plot_with_multiple_datasets(
         last_data_set_size = data_set.size
 
         ax.plot(x_axis_values, data_set.data, label=data_set.label)
-        ax.plot(x_axis_values, [optimum for i in range(0, len(data_set.data))], "optimum")
 
+    ax.plot(
+        x_axis_values, [optimum for i in range(0, len(data_set.data))], label="optimum"
+    )
     ax.legend()
 
     plt.savefig(output_file, dpi=300)
@@ -189,7 +207,7 @@ def run_simulation(
 
     if draw_plot:
         draw_single_simulation_plot(
-            simulation_results, f"{input_file} simulation", output_file
+            simulation_results, f"{input_file} simulation", output_file, optimum
         )
 
     print("\n------Simulation Finished------")
@@ -258,7 +276,7 @@ def run_mutation_and_crossover_simulation():
             output_dir,
         )
 
-        for i, file in enumerate(input_files):
+        for file_iteration, file in enumerate(input_files, 0):
             output_file_name = (
                 os.path.splitext(os.path.basename(file))[0] + "_results.png"
             )
@@ -269,21 +287,29 @@ def run_mutation_and_crossover_simulation():
             simulation_results = []
             for i in range(0, simulations_count):
                 result = run_simulation(
-                    SMALL_POPULATION_SIZE
-                    if run_type == "low_dimensional"
-                    else LARGE_POPULATION_SIZE,
+                    (
+                        SMALL_POPULATION_SIZE
+                        if run_type == "low_dimensional"
+                        else LARGE_POPULATION_SIZE
+                    ),
                     SelectionFunctionType.ROULETTE,
                     file,
-                    input_optimum_files[i],
-                    SMALL_POPULATION_ITERATION_COUNT
-                    if run_type == "low_dimensional"
-                    else LARGE_POPULATION_ITERATION_COUNT,
-                    mutation_probabilities[i]
-                    if mutation_probabilities != []
-                    else DEFAULT_MUTATION_PROBABILITY,
-                    crossover_probabilities[i]
-                    if crossover_probabilities != []
-                    else DEFAULT_CROSSOVER_PROBABILITY,
+                    input_optimum_files[file_iteration],
+                    (
+                        SMALL_POPULATION_ITERATION_COUNT
+                        if run_type == "low_dimensional"
+                        else LARGE_POPULATION_ITERATION_COUNT
+                    ),
+                    (
+                        mutation_probabilities[i]
+                        if mutation_probabilities != []
+                        else DEFAULT_MUTATION_PROBABILITY
+                    ),
+                    (
+                        crossover_probabilities[i]
+                        if crossover_probabilities != []
+                        else DEFAULT_CROSSOVER_PROBABILITY
+                    ),
                     draw_plot=False,
                 )
 
@@ -294,48 +320,65 @@ def run_mutation_and_crossover_simulation():
                     )
                 )
 
+            optimum = load_optimum(input_optimum_files[file_iteration])
             draw_single_plot_with_multiple_datasets(
                 simulation_results,
                 f"{'Mutation' if mutation_probabilities != [] else 'Crossover'} impact on population",
                 full_output_file,
+                optimum,
             )
 
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
-        [SMALL_DATA_FILE_OPTIMUM_1, SMALL_DATA_FILE_OPTIMUM_2, SMALL_DATA_FILE_OPTIMUM_3, SMALL_DATA_FILE_OPTIMUM_4],
+        [
+            SMALL_DATA_FILE_OPTIMUM_1,
+            SMALL_DATA_FILE_OPTIMUM_2,
+            SMALL_DATA_FILE_OPTIMUM_3,
+            SMALL_DATA_FILE_OPTIMUM_4,
+        ],
         "low_dimensional",
         mutation_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
     run_sim(
         "high_dimensional",
         [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
-        [LARGE_OPTIMUM_FILE_5, LARGE_OPTIMUM_FILE_9],
+        [LARGE_DATA_OPTIMUM_FILE_5, LARGE_DATA_OPTIMUM_FILE_9],
         "high_dimensional",
         mutation_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
-        [SMALL_DATA_FILE_OPTIMUM_1, SMALL_DATA_FILE_OPTIMUM_2, SMALL_DATA_FILE_OPTIMUM_3, SMALL_DATA_FILE_OPTIMUM_4],
+        [
+            SMALL_DATA_FILE_OPTIMUM_1,
+            SMALL_DATA_FILE_OPTIMUM_2,
+            SMALL_DATA_FILE_OPTIMUM_3,
+            SMALL_DATA_FILE_OPTIMUM_4,
+        ],
         "low_dimensional",
         crossover_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
     run_sim(
         "high_dimensional",
-        [LARGE_DATA_FILE_9, LARGE_DATA_FILE_9],
-        [LARGE_OPTIMUM_FILE_5, LARGE_OPTIMUM_FILE_9],
+        [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
+        [LARGE_DATA_OPTIMUM_FILE_5, LARGE_DATA_OPTIMUM_FILE_9],
         "high_dimensional",
         crossover_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
 
 
 def run_rank_and_roulette_simulation():
-    def run_sim(output_dir: str, input_files: list[str], run_type):
+    def run_sim(
+        output_dir: str,
+        input_files: list[str],
+        input_optimum_files: list[str],
+        run_type: str,
+    ):
         module_dir = "example/output/rank_vs_roulette/"
         full_output_dir = os.path.join(module_dir, output_dir)
 
-        for file in input_files:
+        for file_iteration, file in enumerate(input_files, 0):
             output_file_name = (
                 os.path.splitext(os.path.basename(file))[0] + "_results.png"
             )
@@ -345,14 +388,19 @@ def run_rank_and_roulette_simulation():
 
             simulation_results = []
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.RANK,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -361,14 +409,19 @@ def run_rank_and_roulette_simulation():
             simulation_results.append(PlottableDataset(result, "rank_selection"))
 
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.ROULETTE,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -376,28 +429,44 @@ def run_rank_and_roulette_simulation():
 
             simulation_results.append(PlottableDataset(result, "roulette_selection"))
 
+            optimum = load_optimum(input_optimum_files[file_iteration])
             draw_single_plot_with_multiple_datasets(
                 simulation_results,
                 "Rank vs Roulette selection algorithms",
                 full_output_file,
+                optimum
             )
 
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        [
+            SMALL_DATA_FILE_OPTIMUM_1,
+            SMALL_DATA_FILE_OPTIMUM_2,
+            SMALL_DATA_FILE_OPTIMUM_3,
+            SMALL_DATA_FILE_OPTIMUM_4,
+        ],
         "low_dimensional",
     )
     run_sim(
-        "high_dimensional", [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9], "high_dimensional"
+        "high_dimensional",
+        [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
+        [LARGE_DATA_OPTIMUM_FILE_5, LARGE_DATA_OPTIMUM_FILE_9],
+        "high_dimensional",
     )
 
 
 def run_single_and_double_point_crossover_simulation():
-    def run_sim(output_dir: str, input_files: list[str], run_type):
+    def run_sim(
+        output_dir: str,
+        input_files: list[str],
+        input_optimum_files: list[str],
+        run_type: str,
+    ):
         module_dir = "example/output/single_vs_double_point_crossover/"
         full_output_dir = os.path.join(module_dir, output_dir)
 
-        for file in input_files:
+        for file_iteration, file in enumerate(input_files, 0):
             output_file_name = (
                 os.path.splitext(os.path.basename(file))[0] + "_results.png"
             )
@@ -407,14 +476,19 @@ def run_single_and_double_point_crossover_simulation():
 
             simulation_results = []
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.ROULETTE,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -426,14 +500,19 @@ def run_single_and_double_point_crossover_simulation():
             )
 
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.ROULETTE,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -444,28 +523,44 @@ def run_single_and_double_point_crossover_simulation():
                 PlottableDataset(result, "double_point_crossover")
             )
 
+            optimum = load_optimum(input_optimum_files[file_iteration])
             draw_single_plot_with_multiple_datasets(
                 simulation_results,
                 "Single vs Double point crossover",
                 full_output_file,
+                optimum,
             )
 
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        [
+            SMALL_DATA_FILE_OPTIMUM_1,
+            SMALL_DATA_FILE_OPTIMUM_2,
+            SMALL_DATA_FILE_OPTIMUM_3,
+            SMALL_DATA_FILE_OPTIMUM_4,
+        ],
         "low_dimensional",
     )
     run_sim(
-        "high_dimensional", [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9], "high_dimensional"
+        "high_dimensional",
+        [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
+        [LARGE_DATA_OPTIMUM_FILE_5, LARGE_DATA_OPTIMUM_FILE_9],
+        "high_dimensional",
     )
 
 
 def run_rank_roulette_and_tournament_simulation():
-    def run_sim(output_dir: str, input_files: list[str], run_type):
+    def run_sim(
+        output_dir: str,
+        input_files: list[str],
+        input_optimum_files: list[str],
+        run_type: str,
+    ):
         module_dir = "example/output/rank_vs_roulette_vs_tournament/"
         full_output_dir = os.path.join(module_dir, output_dir)
 
-        for file in input_files:
+        for file_iteration, file in enumerate(input_files, 0):
             output_file_name = (
                 os.path.splitext(os.path.basename(file))[0] + "_results.png"
             )
@@ -475,14 +570,19 @@ def run_rank_roulette_and_tournament_simulation():
 
             simulation_results = []
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.RANK,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -491,14 +591,19 @@ def run_rank_roulette_and_tournament_simulation():
             simulation_results.append(PlottableDataset(result, "rank_selection"))
 
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.ROULETTE,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -507,14 +612,19 @@ def run_rank_roulette_and_tournament_simulation():
             simulation_results.append(PlottableDataset(result, "roulette_selection"))
 
             result = run_simulation(
-                SMALL_POPULATION_SIZE
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_SIZE,
+                (
+                    SMALL_POPULATION_SIZE
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_SIZE
+                ),
                 SelectionFunctionType.TOURNAMENT,
                 file,
-                SMALL_POPULATION_ITERATION_COUNT
-                if run_type == "low_dimensional"
-                else LARGE_POPULATION_ITERATION_COUNT,
+                input_optimum_files[file_iteration],
+                (
+                    SMALL_POPULATION_ITERATION_COUNT
+                    if run_type == "low_dimensional"
+                    else LARGE_POPULATION_ITERATION_COUNT
+                ),
                 DEFAULT_MUTATION_PROBABILITY,
                 DEFAULT_CROSSOVER_PROBABILITY,
                 draw_plot=False,
@@ -522,19 +632,30 @@ def run_rank_roulette_and_tournament_simulation():
 
             simulation_results.append(PlottableDataset(result, "tournament_selection"))
 
+            optimum = load_optimum(input_optimum_files[file_iteration])
             draw_single_plot_with_multiple_datasets(
                 simulation_results,
                 "Rank vs Roulette vs Tournament selection algorithms",
                 full_output_file,
+                optimum,
             )
 
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        [
+            SMALL_DATA_FILE_OPTIMUM_1,
+            SMALL_DATA_FILE_OPTIMUM_2,
+            SMALL_DATA_FILE_OPTIMUM_3,
+            SMALL_DATA_FILE_OPTIMUM_4,
+        ],
         "low_dimensional",
     )
     run_sim(
-        "high_dimensional", [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9], "high_dimensional"
+        "high_dimensional",
+        [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
+        [LARGE_DATA_OPTIMUM_FILE_5, LARGE_DATA_OPTIMUM_FILE_9],
+        "high_dimensional",
     )
 
 

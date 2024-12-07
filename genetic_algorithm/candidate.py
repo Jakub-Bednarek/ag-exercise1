@@ -1,4 +1,3 @@
-
 import copy
 import random
 
@@ -41,9 +40,11 @@ class Candidate:
 
     def mutate(self):
         self.chromosomes = [
-            not chromosome
-            if random.random() < self.mutation_probability
-            else chromosome
+            (
+                not chromosome
+                if random.random() < self.mutation_probability
+                else chromosome
+            )
             for chromosome in self.chromosomes
         ]
 
