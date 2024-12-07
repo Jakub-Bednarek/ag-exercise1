@@ -8,7 +8,7 @@ from genetic_algorithm.selection_functions import (
     SelectionFunctionFactory,
 )
 from genetic_algorithm.population import simulate_population, PopulationConfig
-from genetic_algorithm.helpers.data_loader import ProgramData, load_data
+from genetic_algorithm.helpers.data_loader import ProgramData, load_data, load_optimum
 
 DATA_PATH = r"data/"
 SMALL_DATA_PATH = os.path.join(DATA_PATH, r"low_dimensional")
@@ -23,6 +23,11 @@ SMALL_DATA_FILE_7 = os.path.join(SMALL_DATA_PATH, r"file_7.txt")
 SMALL_DATA_FILE_8 = os.path.join(SMALL_DATA_PATH, r"file_8.txt")
 SMALL_DATA_FILE_9 = os.path.join(SMALL_DATA_PATH, r"file_9.txt")
 SMALL_DATA_FILE_10 = os.path.join(SMALL_DATA_PATH, r"file_10.txt")
+
+SMALL_DATA_FILE_OPTIMUM_1 = os.path.join(SMALL_DATA_PATH, r"file_1.txt")
+SMALL_DATA_FILE_OPTIMUM_2 = os.path.join(SMALL_DATA_PATH, r"file_2.txt")
+SMALL_DATA_FILE_OPTIMUM_3 = os.path.join(SMALL_DATA_PATH, r"file_3.txt")
+SMALL_DATA_FILE_OPTIMUM_4 = os.path.join(SMALL_DATA_PATH, r"file_4.txt")
 
 SMALL_DATA_FILES = [
     SMALL_DATA_FILE_1,
@@ -51,6 +56,9 @@ LARGE_DATA_FILE_9 = os.path.join(LARGE_DATA_PATH, r"file_9.txt")
 LARGE_DATA_FILE_10 = os.path.join(LARGE_DATA_PATH, r"file_10.txt")
 LARGE_DATA_FILE_11 = os.path.join(LARGE_DATA_PATH, r"file_11.txt")
 LARGE_DATA_FILE_12 = os.path.join(LARGE_DATA_PATH, r"file_12.txt")
+
+LARGE_OPTIMUM_FILE_5 = os.path.join(LARGE_DATA_PATH, r"file_5_optimum.txt")
+LARGE_OPTIMUM_FILE_9 = os.path.join(LARGE_DATA_PATH, r"file_9_optimum.txt")
 
 LARGE_DATA_FILES = [
     LARGE_DATA_FILE_1,
@@ -85,11 +93,12 @@ class PlottableDataset:
 
 
 def draw_single_simulation_plot(
-    simulation_results: list[float], plot_title: str, output_file: str
+    simulation_results: list[float], plot_title: str, output_file: str, optimum
 ):
     fig, ax = plt.subplots()
     fig.set_size_inches(18.5, 10.5)
     ax.plot(range(0, len(simulation_results)), simulation_results)
+    ax.plot(range(0, len(simulation_results)), [optimum for i in range(0, len(simulation_results))], "optimum")
 
     ax.set_xlabel("Iterations")
     ax.set_ylabel("Adaptation score")
@@ -100,7 +109,7 @@ def draw_single_simulation_plot(
 
 
 def draw_single_plot_with_multiple_datasets(
-    plottable_datasets: PlottableDataset, plot_title: str, output_file: str
+    plottable_datasets: PlottableDataset, plot_title: str, output_file: str, optimum
 ):
     last_data_set_size = plottable_datasets[0].size
     x_axis_values = range(1, last_data_set_size + 1)
@@ -120,6 +129,7 @@ def draw_single_plot_with_multiple_datasets(
         last_data_set_size = data_set.size
 
         ax.plot(x_axis_values, data_set.data, label=data_set.label)
+        ax.plot(x_axis_values, [optimum for i in range(0, len(data_set.data))], "optimum")
 
     ax.legend()
 
@@ -136,6 +146,7 @@ def run_simulation(
     population_size: int,
     selection_function_type: SelectionFunctionType,
     input_file: str,
+    optimum_file: str,
     iterations_count: int,
     mutation_probability: float,
     crossover_probability: float,
@@ -146,6 +157,7 @@ def run_simulation(
 ):
     try:
         program_data = load_data(input_file)
+        optimum = load_optimum(optimum_file)
     except Exception as e:
         print(e)
         return []
@@ -233,6 +245,7 @@ def run_mutation_and_crossover_simulation():
     def run_sim(
         output_dir: str,
         input_files: list[str],
+        input_optimum_files: list[str],
         run_type: str,
         mutation_probabilities: list[float] = [],
         crossover_probabilities: list[float] = [],
@@ -245,7 +258,7 @@ def run_mutation_and_crossover_simulation():
             output_dir,
         )
 
-        for file in input_files:
+        for i, file in enumerate(input_files):
             output_file_name = (
                 os.path.splitext(os.path.basename(file))[0] + "_results.png"
             )
@@ -261,6 +274,7 @@ def run_mutation_and_crossover_simulation():
                     else LARGE_POPULATION_SIZE,
                     SelectionFunctionType.ROULETTE,
                     file,
+                    input_optimum_files[i],
                     SMALL_POPULATION_ITERATION_COUNT
                     if run_type == "low_dimensional"
                     else LARGE_POPULATION_ITERATION_COUNT,
@@ -289,24 +303,28 @@ def run_mutation_and_crossover_simulation():
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        [SMALL_DATA_FILE_OPTIMUM_1, SMALL_DATA_FILE_OPTIMUM_2, SMALL_DATA_FILE_OPTIMUM_3, SMALL_DATA_FILE_OPTIMUM_4],
         "low_dimensional",
         mutation_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
     run_sim(
         "high_dimensional",
         [LARGE_DATA_FILE_5, LARGE_DATA_FILE_9],
+        [LARGE_OPTIMUM_FILE_5, LARGE_OPTIMUM_FILE_9],
         "high_dimensional",
         mutation_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
     run_sim(
         "low_dimensional",
         [SMALL_DATA_FILE_1, SMALL_DATA_FILE_2, SMALL_DATA_FILE_3, SMALL_DATA_FILE_4],
+        [SMALL_DATA_FILE_OPTIMUM_1, SMALL_DATA_FILE_OPTIMUM_2, SMALL_DATA_FILE_OPTIMUM_3, SMALL_DATA_FILE_OPTIMUM_4],
         "low_dimensional",
         crossover_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
     run_sim(
         "high_dimensional",
         [LARGE_DATA_FILE_9, LARGE_DATA_FILE_9],
+        [LARGE_OPTIMUM_FILE_5, LARGE_OPTIMUM_FILE_9],
         "high_dimensional",
         crossover_probabilities=[0.02, 0.04, 0.06, 0.08, 0.1],
     )
@@ -521,7 +539,7 @@ def run_rank_roulette_and_tournament_simulation():
 
 
 def run_all_simulations():
-    run_simulation_on_all_test_data_files()
+    # run_simulation_on_all_test_data_files()
     run_mutation_and_crossover_simulation()
     run_rank_and_roulette_simulation()
     run_single_and_double_point_crossover_simulation()

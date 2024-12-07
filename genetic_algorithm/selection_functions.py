@@ -21,18 +21,18 @@ class SelectionFunctionType(Enum):
     def argparse(val):
         try:
             return SelectionFunctionType[val]
-        except KeyError:
+        except KeyError as s:
             return s
 
 
 class SelectionFunctionBase(ABC):
     @abstractmethod
-    def select(self, candidates: list[Candidate]) -> list[Candidate]:
+    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
         pass
 
 
 class RouletteSelectionFunction(SelectionFunctionBase):
-    def select(self, candidates: list[Candidate]) -> list[Candidate]:
+    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
@@ -41,7 +41,7 @@ class RouletteSelectionFunction(SelectionFunctionBase):
             return candidates
 
         selected_candidates_indexes = random.choices(
-            indexes, weights, k=len(candidates)
+            indexes, weights, k=target_population_size
         )
 
         return [
@@ -67,12 +67,12 @@ class RouletteSelectionFunction(SelectionFunctionBase):
 
 
 class TournamentSelectionFunction(SelectionFunctionBase):
-    def select(self, candidates: list[Candidate]) -> list[Candidate]:
+    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
         selected_candidates: list[Candidate] = []
-        for i in range(0, len(candidates)):
+        for i in range(0, target_population_size):
             local_tournament_size = random.randint(1, len(candidates) - 1)
 
             tournament_winner = self.__evaluate_local_tournament(
@@ -110,13 +110,13 @@ class TournamentSelectionFunction(SelectionFunctionBase):
 
 
 class RankSelectionFunction(SelectionFunctionBase):
-    def select(self, candidates: list[Candidate]) -> list[Candidate]:
+    def select(self, candidates: list[Candidate], target_population_size: int) -> list[Candidate]:
         if len(candidates) == 0:
             raise EmptyCandidatesListException()
 
         candidates.sort(key=lambda x: x.get_adaptation_score(), reverse=True)
 
-        weights_and_indexes = [i for i in range(0, len(candidates))]
+        weights_and_indexes = [i for i in range(0, target_population_size)]
         selected_candidates_indexes = random.choices(
             weights_and_indexes,
             sorted(weights_and_indexes, reverse=True),

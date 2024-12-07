@@ -1,3 +1,5 @@
+
+import copy
 import random
 
 from genetic_algorithm.helpers.data_loader import DataEntry
@@ -47,9 +49,9 @@ class Candidate:
 
     def crossover(self, other_parent, double_point_crossover_enabled: bool):
         if double_point_crossover_enabled:
-            self.__double_point_crossover(other_parent)
+            return self.__double_point_crossover(other_parent)
         else:
-            self.__single_point_crossover(other_parent)
+            return self.__single_point_crossover(other_parent)
 
     def get_adaptation_score(self) -> float:
         return self.adaptation_score
@@ -71,15 +73,19 @@ class Candidate:
 
     def __single_point_crossover(self, other_parent):
         crossover_point = self.__generate_crossover_point()
+        new_candidate = copy.deepcopy(self)
 
-        self.chromosomes = (
-            self.chromosomes[0:crossover_point]
+        new_candidate.chromosomes = (
+            new_candidate.chromosomes[0:crossover_point]
             + other_parent.chromosomes[crossover_point:]
         )
+
+        return new_candidate
 
     def __double_point_crossover(self, other_parent):
         first_crossover_point = self.__generate_crossover_point()
         second_crossover_point = first_crossover_point
+        new_candidate = copy.deepcopy(self)
 
         while second_crossover_point == first_crossover_point:
             second_crossover_point = self.__generate_crossover_point()
@@ -91,15 +97,17 @@ class Candidate:
             first_crossover_point, second_crossover_point
         )
 
-        self.chromosomes = (
-            self.chromosomes[0:first_crossover_point]
+        new_candidate.chromosomes = (
+            new_candidate.chromosomes[0:first_crossover_point]
             + other_parent.chromosomes[first_crossover_point:second_crossover_point]
-            + self.chromosomes[second_crossover_point:]
+            + new_candidate.chromosomes[second_crossover_point:]
         )
+
+        return new_candidate
 
     # python list operator does not include upper bound of the range, safe to use full length
     def __generate_crossover_point(self) -> int:
-        return random.randint(0, self.chromosomes_count)
+        return random.randint(0, self.chromosomes_count - 1)
 
     def __get_sorted_crossover_points(
         self, first_crossover_point: int, second_crossover_point: int

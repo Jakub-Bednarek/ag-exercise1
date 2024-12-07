@@ -53,3 +53,16 @@ def load_data(file_path: str) -> ProgramData:
         program_data.add_entry(float(item_value), float(item_weight))
 
     return program_data
+
+def load_optimum(file_path: str) -> ProgramData:
+    file_path = os.path.abspath(file_path)
+
+    file_content = []
+    with open(file_path, "r") as file_stream:
+        file_content = file_stream.readlines()
+
+    if len(file_content) == 0:
+        raise EmptyInputException()
+        
+    return float(file_content[0])
+
